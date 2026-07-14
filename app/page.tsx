@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback } from "react";
-import { Aperture, FileSpreadsheet } from "lucide-react";
+import { Aperture } from "lucide-react";
 import { UploadZone } from "@/components/forms/upload-zone";
-import { Button } from "@/components/ui/button";
+import { Workspace } from "@/components/layout/workspace";
 import { useHydrateStore } from "@/hooks/use-hydrate-store";
 import { parseWorkbookFile } from "@/lib/parser";
 import { useAppStore } from "@/store/use-app-store";
@@ -12,7 +12,6 @@ export default function Home() {
   const hydrated = useHydrateStore();
   const workbook = useAppStore((state) => state.workbook);
   const setWorkbook = useAppStore((state) => state.setWorkbook);
-  const clearWorkbook = useAppStore((state) => state.clearWorkbook);
   const handleFile = useCallback(
     async (file: File) => setWorkbook(await parseWorkbookFile(file)),
     [setWorkbook],
@@ -27,22 +26,7 @@ export default function Home() {
   }
 
   if (workbook) {
-    return (
-      <main className="grid min-h-screen place-items-center p-6">
-        <div className="w-full max-w-lg rounded-3xl border bg-surface-raised p-8 text-center shadow-[var(--shadow)]">
-          <FileSpreadsheet className="mx-auto size-9 text-accent" />
-          <h1 className="mt-4 font-serif text-2xl">{workbook.name}</h1>
-          <p className="mt-2 text-sm text-muted">
-            {workbook.sheets.length} {workbook.sheets.length === 1 ? "sheet" : "sheets"} ·{" "}
-            {workbook.sheets.reduce((total, sheet) => total + sheet.responses.length, 0)} responses
-          </p>
-          <p className="mt-6 text-sm text-muted">Your response workspace is ready.</p>
-          <Button className="mt-6" variant="secondary" onClick={() => void clearWorkbook()}>
-            Choose another file
-          </Button>
-        </div>
-      </main>
-    );
+    return <Workspace />;
   }
 
   return (
