@@ -5,11 +5,13 @@ import { Aperture } from "lucide-react";
 import { UploadZone } from "@/components/forms/upload-zone";
 import { Workspace } from "@/components/layout/workspace";
 import { useHydrateStore } from "@/hooks/use-hydrate-store";
+import { useAppearance } from "@/hooks/use-appearance";
 import { parseWorkbookFile } from "@/lib/parser";
 import { useAppStore } from "@/store/use-app-store";
 
 export default function Home() {
   const hydrated = useHydrateStore();
+  useAppearance();
   const workbook = useAppStore((state) => state.workbook);
   const setWorkbook = useAppStore((state) => state.setWorkbook);
   const handleFile = useCallback(

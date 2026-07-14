@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { clearAppState, loadAppState, saveAppState } from "@/lib/db";
+import { parseSettings } from "@/lib/settings";
 import type { AppSettings, ReviewState, WorkbookData } from "@/types/workbook";
 
 const DEFAULT_SETTINGS: AppSettings = {
@@ -46,7 +47,9 @@ export const useAppStore = create<AppStore>((set, get) => ({
   hydrate: async () => {
     try {
       const saved = await loadAppState();
-      if (saved) set({ ...saved, hydrated: true });
+      if (saved) {
+        set({ ...saved, settings: parseSettings(saved.settings, DEFAULT_SETTINGS), hydrated: true });
+      }
       else set({ hydrated: true });
     } catch {
       set({ hydrated: true });
