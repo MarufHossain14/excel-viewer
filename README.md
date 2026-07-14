@@ -1,6 +1,6 @@
 # FormLens
 
-FormLens turns Excel and CSV form submissions into a focused, one-response-at-a-time review workspace. Files and review metadata remain entirely in the browser and are persisted with IndexedDB.
+Turns Excel and CSV form submissions into a focused, one-response-at-a-time review workspace. Files and review metadata remain entirely in the browser and are persisted with IndexedDB.
 
 ## Features
 
