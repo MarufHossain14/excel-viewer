@@ -29,7 +29,3 @@ export async function loadAppState() {
 export async function saveAppState(state: PersistedAppState) {
   await (await database).put("state", state, "current");
 }
-
-export async function clearAppState() {
-  await (await database).delete("state", "current");
-}

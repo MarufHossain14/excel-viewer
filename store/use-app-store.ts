@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { clearAppState, loadAppState, saveAppState } from "@/lib/db";
+import { loadAppState, saveAppState } from "@/lib/db";
 import { parseSettings } from "@/lib/settings";
 import type { AppSettings, ReviewState, WorkbookData } from "@/types/workbook";
 
@@ -27,14 +27,19 @@ interface AppStore {
   updateSettings: (update: Partial<AppSettings>) => void;
 }
 
-function persist(state: AppStore) {
-  void saveAppState({
+let persistenceTimer: ReturnType<typeof setTimeout> | undefined;
+
+function persist(state: AppStore, immediate = false) {
+  const snapshot = {
     workbook: state.workbook,
     selectedSheetId: state.selectedSheetId,
     currentResponseId: state.currentResponseId,
     reviews: state.reviews,
     settings: state.settings,
-  });
+  };
+  if (persistenceTimer) clearTimeout(persistenceTimer);
+  if (immediate) void saveAppState(snapshot);
+  else persistenceTimer = setTimeout(() => void saveAppState(snapshot), 180);
 }
 
 export const useAppStore = create<AppStore>((set, get) => ({
@@ -63,11 +68,11 @@ export const useAppStore = create<AppStore>((set, get) => ({
       currentResponseId: firstSheet?.responses[0]?.id ?? null,
       reviews: {},
     });
-    persist(get());
+    persist(get(), true);
   },
   clearWorkbook: async () => {
     set({ workbook: null, selectedSheetId: null, currentResponseId: null, reviews: {} });
-    await clearAppState();
+    persist(get(), true);
   },
   selectSheet: (selectedSheetId) => {
     const sheet = get().workbook?.sheets.find((candidate) => candidate.id === selectedSheetId);
