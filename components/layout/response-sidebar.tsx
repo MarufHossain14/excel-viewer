@@ -43,11 +43,11 @@ export function ResponseSidebar({
   useEffect(() => scrollToIndex(currentIndex), [currentIndex, scrollToIndex]);
 
   return (
-    <aside className="flex min-h-0 flex-col border-b bg-surface/92 md:border-b-0 md:border-r" aria-label="Response navigation">
+    <aside className="flex min-h-0 flex-col border-b bg-surface md:border-b-0 md:border-r" aria-label="Response navigation">
       <div className="border-b px-4 pb-4 pt-5">
         <div className="mb-3 flex items-end justify-between">
           <div>
-            <p className="text-[13px] font-extrabold tracking-[-0.02em]">Responses</p>
+            <p className="text-sm font-semibold">Responses</p>
             <p className="mt-1 text-[12px] text-muted">
               {query ? `${responses.length} of ${totalResponses} found` : `${totalResponses} total`}
             </p>
@@ -63,7 +63,7 @@ export function ResponseSidebar({
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search every answer…"
-            className="h-10 w-full rounded-xl border bg-surface-raised pl-9 pr-3 text-[13px] shadow-sm outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
+            className="h-9 w-full rounded-lg border bg-surface-raised pl-9 pr-3 text-[13px] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15"
           />
         </label>
       </div>
@@ -85,8 +85,8 @@ export function ResponseSidebar({
                 aria-setsize={responses.length}
                 type="button"
                 className={cn(
-                  "absolute left-0 flex h-[66px] w-full items-start gap-3 rounded-xl border border-transparent px-3 py-3 text-left transition-[background-color,border-color,box-shadow]",
-                  selected ? "border-accent/20 bg-accent-soft text-foreground shadow-sm" : "hover:bg-background/85",
+                  "absolute left-0 flex h-[66px] w-full items-start gap-3 rounded-lg border border-transparent px-3 py-3 text-left transition-[background-color,border-color] before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-transparent",
+                  selected ? "border-border bg-surface-raised text-foreground before:bg-brand" : "hover:bg-surface-raised",
                 )}
                 style={{ top: index * 72 }}
                 onClick={() => onSelect(response.id)}
@@ -95,7 +95,7 @@ export function ResponseSidebar({
                   className={cn(
                     "mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg border text-[11px] font-bold tabular-nums",
                     review?.reviewed
-                      ? "border-accent bg-accent text-accent-foreground"
+                      ? "border-foreground bg-foreground text-background"
                       : "bg-surface-raised text-muted",
                   )}
                 >
@@ -103,10 +103,10 @@ export function ResponseSidebar({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-1.5">
-                    <span className="truncate text-[13px] font-bold tracking-[-0.01em]">
+                    <span className="truncate text-[13px] font-medium">
                       <SearchHighlight text={title} query={query} />
                     </span>
-                    {review?.starred && <Star className="size-3 fill-current text-[#c5962d]" />}
+                    {review?.starred && <Star className="size-3 fill-current text-brand" />}
                   </span>
                   <span className="mt-1 block truncate text-[12px] text-muted">
                     <SearchHighlight text={subtitle} query={query} />

@@ -39,14 +39,14 @@ export function ResponseViewer({
     : response.fields;
 
   return (
-    <div className="mx-auto w-full max-w-[980px] animate-rise-in">
-      <div className="mb-6 flex items-center justify-between px-1">
+    <div className="mx-auto w-full max-w-[960px] animate-rise-in">
+      <div className="mb-4 flex items-center justify-between">
         <div>
-          <p className="text-[13px] font-extrabold tracking-[-0.01em] text-foreground">
-            Response <span className="tabular-nums text-accent">{position}</span>
-            <span className="font-medium text-muted"> of {total}</span>
+          <p className="text-sm font-semibold text-foreground">
+            Response <span className="font-mono tabular-nums">{position}</span>
+            <span className="font-normal text-muted"> of {total}</span>
           </p>
-          <p className="mt-1 text-[12px] text-muted">Source row {response.rowNumber}</p>
+          <p className="mt-0.5 text-xs text-muted">Source row {response.rowNumber}</p>
         </div>
         <div className="flex items-center gap-1.5">
           <Button
@@ -72,29 +72,28 @@ export function ResponseViewer({
 
       <article
         className={cn(
-          "relative overflow-hidden rounded-[28px] border border-border-strong bg-surface-raised shadow-[var(--shadow)] before:pointer-events-none before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-white/70 dark:before:bg-white/10",
-          compact ? "p-5 sm:p-7" : "p-6 sm:p-9 lg:p-11",
+          "rounded-xl border border-border bg-surface-raised shadow-[var(--shadow-soft)]",
+          compact ? "px-5 sm:px-7" : "px-6 sm:px-9 lg:px-10",
         )}
         aria-label={`Response ${position}`}
       >
         {fields.length ? (
-          <dl className={cn("grid grid-cols-1 sm:grid-cols-2", compact ? "gap-3.5" : "gap-4 sm:gap-5")}>
+          <dl className={cn("grid grid-cols-1 sm:grid-cols-2", compact ? "gap-x-7" : "gap-x-10")}>
             {fields.map((field) => (
               <div
                 key={field.id}
                 className={cn(
-                  "relative rounded-2xl border border-border/85 bg-background/45 px-4 py-4 sm:px-5 sm:py-[18px]",
+                  "border-t border-border py-5 first:border-t-0 sm:[&:nth-child(2)]:border-t-0",
                   field.isLong && "sm:col-span-2",
                 )}
               >
-                <dt className="mb-2.5 flex items-start gap-2 text-[12px] font-bold leading-5 tracking-[-0.005em] text-muted">
-                  <span className="mt-[7px] size-1.5 shrink-0 rounded-full bg-accent/65" aria-hidden="true" />
+                <dt className="mb-2 text-[13px] font-medium leading-5 text-muted">
                   <SearchHighlight text={field.label} query={query} />
                 </dt>
                 <dd
                   className={cn(
-                    "whitespace-pre-wrap break-words pl-3.5 text-base font-medium leading-7 tracking-[-0.008em] text-foreground",
-                    field.isLong && "max-w-[74ch] font-serif text-lg font-normal leading-[1.78] tracking-[-0.01em]",
+                    "whitespace-pre-wrap break-words text-base font-normal leading-7 text-foreground",
+                    field.isLong && "max-w-[76ch] text-[17px] leading-8",
                     field.value === null && "italic text-muted-foreground",
                   )}
                 >
@@ -108,16 +107,16 @@ export function ResponseViewer({
           </dl>
         ) : (
           <div className="py-20 text-center">
-            <p className="font-serif text-xl">This response has no answers.</p>
+            <p className="text-lg font-semibold">This response has no answers.</p>
             <p className="mt-2 text-sm text-muted">Empty fields are hidden in your settings.</p>
           </div>
         )}
       </article>
       {reviewPanel}
 
-      <div className="mt-6 flex items-center justify-center gap-2.5 text-[12px] text-muted">
-        <span className="rounded-md border bg-surface-raised px-2 py-1 font-semibold shadow-sm">←</span>
-        <span className="rounded-md border bg-surface-raised px-2 py-1 font-semibold shadow-sm">→</span>
+      <div className="mt-5 flex items-center justify-center gap-2.5 text-xs text-muted">
+        <span className="rounded-md border bg-surface-raised px-2 py-1 font-mono">←</span>
+        <span className="rounded-md border bg-surface-raised px-2 py-1 font-mono">→</span>
         Navigate responses
       </div>
     </div>

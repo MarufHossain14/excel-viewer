@@ -13,7 +13,7 @@ interface ReviewPanelProps {
 
 export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) {
   return (
-    <section className="mt-5 rounded-[22px] border border-border-strong bg-surface-raised p-4 shadow-[var(--shadow-soft)] sm:p-5" aria-label="Private review">
+    <section className="mt-4 rounded-xl border border-border bg-surface-raised p-4 shadow-[var(--shadow-soft)] sm:p-5" aria-label="Private review">
       <div className="flex flex-wrap items-center gap-3">
         <Button
           variant={review.reviewed ? "default" : "secondary"}
@@ -26,7 +26,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
         <Button
           variant="secondary"
           size="icon"
-          className={cn(review.starred && "border-[#d4ad50] text-[#b17d10]")}
+          className={cn(review.starred && "border-brand text-brand")}
           onClick={() => onChange({ starred: !review.starred })}
           aria-label={review.starred ? "Remove star" : "Star response"}
           aria-pressed={review.starred}
@@ -39,7 +39,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
             <button
               key={rating}
               type="button"
-              className="rounded-md p-1 text-[#c5962d] transition-transform hover:scale-110"
+              className="rounded-md p-1 text-brand transition-opacity hover:opacity-70"
               onClick={() => onChange({ rating: review.rating === rating ? 0 : rating })}
               aria-label={`${rating} star${rating === 1 ? "" : "s"}`}
               aria-pressed={review.rating === rating}
@@ -58,7 +58,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
           onChange={(event) => onChange({ notes: event.target.value })}
           placeholder="Add context, follow-up questions, or a reminder…"
           rows={3}
-          className="w-full resize-y rounded-xl border bg-background/65 px-4 py-3.5 text-[14px] leading-6 shadow-inner outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
+          className="w-full resize-y rounded-lg border bg-surface-raised px-3 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15"
         />
       </label>
     </section>

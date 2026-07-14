@@ -2,21 +2,22 @@
 
 :root {
   color-scheme: light;
-  --background: #f2f4f0;
-  --foreground: #18201b;
-  --surface: #f8f9f6;
-  --surface-raised: #fffefa;
-  --muted: #5f6b63;
-  --muted-foreground: #737d75;
-  --border: #dce1da;
-  --border-strong: #c8d0c7;
-  --accent: #1f6246;
-  --accent-soft: #e2eee6;
-  --accent-foreground: #f8fff9;
-  --danger: #aa3f34;
-  --ring: #2d7352;
-  --shadow: 0 1px 2px rgb(26 40 31 / 0.04), 0 18px 50px rgb(26 40 31 / 0.08);
-  --shadow-soft: 0 8px 24px rgb(26 40 31 / 0.06);
+  --background: #f7f7f7;
+  --foreground: #1a1a1a;
+  --surface: #fafafa;
+  --surface-raised: #ffffff;
+  --muted: #666666;
+  --muted-foreground: #858585;
+  --border: #e5e5e5;
+  --border-strong: #d4d4d4;
+  --accent: #1a1a1a;
+  --accent-soft: #f0f0f0;
+  --accent-foreground: #ffffff;
+  --brand: #f6821f;
+  --danger: #d92d20;
+  --ring: #0070f3;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.06);
+  --shadow-soft: 0 1px 3px rgb(0 0 0 / 0.06);
 }
 
 @theme inline {
@@ -31,28 +32,31 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
+  --color-brand: var(--brand);
   --color-danger: var(--danger);
+  --color-ring: var(--ring);
   --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
 }
 
 .dark {
   color-scheme: dark;
-  --background: #101511;
-  --foreground: #edf2ec;
-  --surface: #151b16;
-  --surface-raised: #1b231d;
-  --muted: #adb8af;
-  --muted-foreground: #919d93;
-  --border: #2b352d;
-  --border-strong: #3b493e;
-  --accent: #86c69d;
-  --accent-soft: #203a29;
-  --accent-foreground: #0c2114;
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --surface: #0f0f0f;
+  --surface-raised: #141414;
+  --muted: #a1a1a1;
+  --muted-foreground: #7d7d7d;
+  --border: #292929;
+  --border-strong: #3a3a3a;
+  --accent: #ededed;
+  --accent-soft: #1f1f1f;
+  --accent-foreground: #0a0a0a;
+  --brand: #ff8a24;
   --danger: #ef8578;
-  --ring: #8bc29e;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.25), 0 24px 64px rgb(0 0 0 / 0.32);
-  --shadow-soft: 0 10px 30px rgb(0 0 0 / 0.2);
+  --ring: #3291ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 28px rgb(0 0 0 / 0.35);
+  --shadow-soft: 0 1px 3px rgb(0 0 0 / 0.3);
 }
 
 * {
@@ -78,13 +82,8 @@ body {
   font-family: var(--font-sans), sans-serif;
   text-rendering: optimizeLegibility;
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
-  letter-spacing: -0.008em;
+  letter-spacing: -0.005em;
   line-height: 1.5;
-}
-
-.font-serif {
-  font-optical-sizing: auto;
-  letter-spacing: -0.018em;
 }
 
 * {

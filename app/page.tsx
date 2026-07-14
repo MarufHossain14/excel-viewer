@@ -32,34 +32,33 @@ export default function Home() {
   }
 
   return (
-    <main id="main-content" className="relative grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden px-6 py-5 sm:px-10 sm:py-7">
-      <div className="pointer-events-none absolute inset-0 opacity-70 [background-image:radial-gradient(circle_at_18%_10%,color-mix(in_srgb,var(--accent)_13%,transparent),transparent_28%),radial-gradient(circle_at_88%_82%,color-mix(in_srgb,var(--accent)_7%,transparent),transparent_30%),linear-gradient(to_right,color-mix(in_srgb,var(--border)_32%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--border)_32%,transparent)_1px,transparent_1px)] [background-size:auto,auto,36px_36px,36px_36px]" />
-      <header className="relative flex items-center justify-between">
+    <main id="main-content" className="grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden bg-background px-6 py-5 sm:px-10 sm:py-7">
+      <header className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <span className="grid size-9 place-items-center rounded-xl bg-foreground text-background shadow-[var(--shadow-soft)]">
+          <span className="grid size-8 place-items-center rounded-lg bg-foreground text-background">
             <Aperture className="size-[18px]" aria-hidden="true" />
           </span>
-          <span className="text-[15px] font-extrabold tracking-[-0.03em]">FormLens</span>
+          <span className="text-sm font-semibold tracking-[-0.02em]">FormLens</span>
         </div>
-        <div className="rounded-full border border-border bg-surface/80 px-3.5 py-1.5 text-[11px] font-bold tracking-[0.08em] text-muted shadow-sm backdrop-blur">
+        <div className="rounded-md border border-border bg-surface-raised px-2.5 py-1.5 text-xs font-medium text-muted">
           LOCAL WORKSPACE
         </div>
       </header>
 
-      <section className="relative flex flex-col items-center justify-center py-16">
-        <div className="mb-9 text-center">
-          <p className="mb-4 text-xs font-extrabold uppercase tracking-[0.16em] text-accent">
+      <section className="flex flex-col items-center justify-center py-14">
+        <div className="mb-8 text-center">
+          <p className="mb-3 text-sm font-medium text-brand">
             One response at a time
           </p>
-          <h1 className="mx-auto max-w-2xl text-pretty font-serif text-[42px] font-medium leading-[1.02] tracking-[-0.045em] sm:text-[58px]">
+          <h1 className="mx-auto max-w-2xl text-pretty text-4xl font-semibold leading-[1.1] tracking-[-0.04em] sm:text-5xl">
             Your spreadsheet,
-            <br /> <span className="text-accent">finally readable.</span>
+            <br /> finally readable.
           </h1>
         </div>
         <UploadZone onFile={handleFile} />
       </section>
 
-      <footer className="relative text-center text-[11px] text-muted">
+      <footer className="text-center text-xs text-muted">
         Private by design · Stored locally in your browser
       </footer>
     </main>

@@ -10,14 +10,15 @@ export const DialogTrigger = DialogPrimitive.Trigger;
 export function DialogContent({
   className,
   children,
+  showOverlay = true,
   ...props
-}: DialogPrimitive.DialogContentProps) {
+}: DialogPrimitive.DialogContentProps & { showOverlay?: boolean }) {
   return (
     <DialogPrimitive.Portal>
-      <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-[#111711]/45 backdrop-blur-sm data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[rise-in_180ms_ease-out]" />
+      {showOverlay && <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/50" />}
       <DialogPrimitive.Content
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overscroll-contain overflow-y-auto rounded-[26px] border border-border-strong bg-surface-raised p-6 shadow-[var(--shadow)] focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:p-8",
+          "fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overscroll-contain overflow-y-auto rounded-xl border border-border-strong bg-surface-raised p-6 shadow-[var(--shadow)] focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:p-7",
           className,
         )}
         {...props}
@@ -36,7 +37,7 @@ export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLD
 }
 
 export function DialogTitle({ className, ...props }: DialogPrimitive.DialogTitleProps) {
-  return <DialogPrimitive.Title className={cn("font-serif text-[28px] font-medium leading-tight tracking-[-0.035em]", className)} {...props} />;
+  return <DialogPrimitive.Title className={cn("text-xl font-semibold leading-7 tracking-[-0.02em]", className)} {...props} />;
 }
 
 export function DialogDescription({ className, ...props }: DialogPrimitive.DialogDescriptionProps) {
