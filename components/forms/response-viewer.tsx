@@ -5,6 +5,7 @@ import { SearchHighlight } from "@/components/forms/search-highlight";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { FormResponse } from "@/types/workbook";
+import type { ReactNode } from "react";
 
 interface ResponseViewerProps {
   response: FormResponse;
@@ -17,6 +18,7 @@ interface ResponseViewerProps {
   onNext: () => void;
   canPrevious: boolean;
   canNext: boolean;
+  reviewPanel?: ReactNode;
 }
 
 export function ResponseViewer({
@@ -30,6 +32,7 @@ export function ResponseViewer({
   onNext,
   canPrevious,
   canNext,
+  reviewPanel,
 }: ResponseViewerProps) {
   const fields = hideEmpty
     ? response.fields.filter((field) => field.value !== null)
@@ -108,6 +111,7 @@ export function ResponseViewer({
           </div>
         )}
       </article>
+      {reviewPanel}
 
       <div className="mt-5 flex items-center justify-center gap-3 text-[11px] text-muted">
         <span className="rounded-md border bg-surface px-2 py-1 font-semibold">←</span>
