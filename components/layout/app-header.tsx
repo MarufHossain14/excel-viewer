@@ -2,6 +2,7 @@
 
 import { Aperture, ChevronDown, FileSpreadsheet, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { WorkbookData } from "@/types/workbook";
 import type { ReactNode } from "react";
 
@@ -40,7 +41,8 @@ export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset, c
           <label className="relative hidden sm:block">
             <span className="sr-only">Worksheet</span>
             <select
-              className="h-9 appearance-none rounded-xl border bg-surface-raised py-0 pl-3 pr-8 text-xs font-semibold shadow-sm outline-none focus:ring-2 focus:ring-[var(--ring)]"
+              name="worksheet"
+              className="h-9 appearance-none rounded-xl border bg-surface-raised py-0 pl-3 pr-8 text-xs font-semibold shadow-sm outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]"
               value={selectedSheetId}
               onChange={(event) => onSelectSheet(event.target.value)}
             >
@@ -59,9 +61,25 @@ export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset, c
         )}
         <span className="mx-0.5 h-5 w-px bg-border" aria-hidden="true" />
         {children}
-        <Button size="icon-sm" variant="ghost" onClick={onReset} aria-label="Open another file">
-          <RotateCcw className="size-4" />
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button size="icon-sm" variant="ghost" aria-label="Open another file">
+              <RotateCcw className="size-4" aria-hidden="true" />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Open Another File?</DialogTitle>
+              <DialogDescription>
+                The current workbook and its review data will be removed from this browser. Export your notes first if you need them.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex justify-end gap-2">
+              <DialogTrigger asChild><Button variant="secondary">Keep Workbook</Button></DialogTrigger>
+              <Button variant="danger" onClick={onReset}>Remove & Open Another</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </header>
   );

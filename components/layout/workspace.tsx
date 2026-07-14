@@ -76,7 +76,7 @@ export function Workspace() {
   if (!workbook || !selectedSheetId || !sheet) return null;
 
   return (
-    <main className="flex h-screen min-h-[620px] flex-col overflow-hidden bg-background">
+    <main id="main-content" className="flex h-screen min-h-[620px] flex-col overflow-hidden bg-background">
       <AppHeader
         workbook={workbook}
         selectedSheetId={selectedSheetId}

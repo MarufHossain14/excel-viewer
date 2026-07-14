@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   --background: #f5f4ef;
   --foreground: #1d211d;
   --surface: #fbfaf6;
@@ -35,6 +36,7 @@
 }
 
 .dark {
+  color-scheme: dark;
   --background: #151815;
   --foreground: #edefe9;
   --surface: #1b1f1b;
@@ -84,6 +86,7 @@ select {
 
 button:not(:disabled) {
   cursor: pointer;
+  touch-action: manipulation;
 }
 
 ::selection {

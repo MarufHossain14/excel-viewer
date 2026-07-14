@@ -58,10 +58,12 @@ export function ResponseSidebar({
           <Search className="pointer-events-none absolute left-3 top-2.5 size-4 text-muted" />
           <input
             type="search"
+            name="response-search"
+            autoComplete="off"
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search every answer…"
-            className="h-9 w-full rounded-xl border bg-surface-raised pl-9 pr-3 text-xs outline-none placeholder:text-muted-foreground focus:border-accent focus:ring-2 focus:ring-accent/15"
+            className="h-9 w-full rounded-xl border bg-surface-raised pl-9 pr-3 text-xs outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
           />
         </label>
       </div>
@@ -79,6 +81,9 @@ export function ResponseSidebar({
                 key={response.id}
                 role="option"
                 aria-selected={selected}
+                aria-posinset={index + 1}
+                aria-setsize={responses.length}
+                type="button"
                 className={cn(
                   "absolute left-0 flex h-[61px] w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition-colors",
                   selected ? "bg-accent-soft text-foreground" : "hover:bg-background",

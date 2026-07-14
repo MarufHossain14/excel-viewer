@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, Lora } from "next/font/google";
 import "./globals.css";
 
@@ -18,6 +18,13 @@ export const metadata: Metadata = {
     "Review Excel and CSV form responses in a private, focused workspace.",
 };
 
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f5f4ef" },
+    { media: "(prefers-color-scheme: dark)", color: "#151815" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +36,15 @@ export default function RootLayout({
       className={`${dmSans.variable} ${lora.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body>{children}</body>
+      <body>
+        <a
+          href="#main-content"
+          className="fixed left-3 top-3 z-[100] -translate-y-20 rounded-lg bg-foreground px-4 py-2 text-sm font-semibold text-background transition-transform focus:translate-y-0"
+        >
+          Skip to main content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

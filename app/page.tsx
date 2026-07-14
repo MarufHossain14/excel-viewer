@@ -21,7 +21,7 @@ export default function Home() {
 
   if (!hydrated) {
     return (
-      <main className="grid min-h-screen place-items-center" aria-label="Loading workspace">
+      <main id="main-content" className="grid min-h-screen place-items-center" aria-label="Loading workspace">
         <Aperture className="size-7 animate-pulse text-accent" aria-hidden="true" />
       </main>
     );
@@ -32,7 +32,7 @@ export default function Home() {
   }
 
   return (
-    <main className="relative grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden px-6 py-5 sm:px-10 sm:py-7">
+    <main id="main-content" className="relative grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden px-6 py-5 sm:px-10 sm:py-7">
       <div className="pointer-events-none absolute inset-0 opacity-55 [background-image:radial-gradient(circle_at_20%_10%,color-mix(in_srgb,var(--accent)_10%,transparent),transparent_26%),linear-gradient(to_right,color-mix(in_srgb,var(--border)_38%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--border)_38%,transparent)_1px,transparent_1px)] [background-size:auto,32px_32px,32px_32px]" />
       <header className="relative flex items-center justify-between">
         <div className="flex items-center gap-2.5">

@@ -21,7 +21,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
           aria-pressed={review.reviewed}
         >
           <Check className="size-4" />
-          {review.reviewed ? "Reviewed" : "Mark reviewed"}
+          {review.reviewed ? "Reviewed" : "Mark Reviewed"}
         </Button>
         <Button
           variant="secondary"
@@ -38,6 +38,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
           {[1, 2, 3, 4, 5].map((rating) => (
             <button
               key={rating}
+              type="button"
               className="rounded-md p-1 text-[#c5962d] transition-transform hover:scale-110"
               onClick={() => onChange({ rating: review.rating === rating ? 0 : rating })}
               aria-label={`${rating} star${rating === 1 ? "" : "s"}`}
@@ -51,11 +52,13 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
       <label className="mt-4 block">
         <span className="mb-2 block text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Private notes</span>
         <textarea
+          name="private-notes"
+          autoComplete="off"
           value={review.notes}
           onChange={(event) => onChange({ notes: event.target.value })}
           placeholder="Add context, follow-up questions, or a reminder…"
           rows={3}
-          className="w-full resize-y rounded-xl border bg-background/70 px-3.5 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus:border-accent focus:ring-2 focus:ring-accent/15"
+          className="w-full resize-y rounded-xl border bg-background/70 px-3.5 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
         />
       </label>
     </section>

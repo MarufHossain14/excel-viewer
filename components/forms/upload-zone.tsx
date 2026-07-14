@@ -61,8 +61,8 @@ export function UploadZone({ onFile }: UploadZoneProps) {
     <div className="w-full max-w-2xl animate-rise-in">
       <div
         className={cn(
-          "group relative overflow-hidden rounded-[28px] border border-border-strong bg-surface-raised p-3 shadow-[var(--shadow)] transition-all duration-300",
-          isDragging && "scale-[1.01] border-accent bg-accent-soft",
+          "group relative overflow-hidden rounded-[28px] border border-border-strong bg-surface-raised p-3 shadow-[var(--shadow)] transition-[transform,background-color,border-color] duration-300",
+          isDragging && "select-none scale-[1.01] border-accent bg-accent-soft",
         )}
         onDragEnter={(event) => {
           event.preventDefault();
@@ -97,6 +97,7 @@ export function UploadZone({ onFile }: UploadZoneProps) {
             ref={inputRef}
             className="sr-only"
             type="file"
+            name="workbook"
             accept=".xlsx,.xls,.csv"
             onChange={(event) => void handleFile(event.target.files?.[0])}
           />
@@ -107,7 +108,7 @@ export function UploadZone({ onFile }: UploadZoneProps) {
             disabled={isLoading}
           >
             <Upload className="size-4" aria-hidden="true" />
-            Choose file
+            Choose File
           </Button>
 
           {file && (
@@ -120,6 +121,7 @@ export function UploadZone({ onFile }: UploadZoneProps) {
                 </div>
                 {!isLoading && (
                   <button
+                    type="button"
                     className="rounded-md p-1 text-muted hover:bg-border"
                     onClick={() => setFile(null)}
                     aria-label="Remove selected file"

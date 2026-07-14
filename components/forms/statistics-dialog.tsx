@@ -25,7 +25,7 @@ export function StatisticsDialog({ responses, reviews }: { responses: FormRespon
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Review progress</DialogTitle>
+          <DialogTitle>Review Progress</DialogTitle>
           <DialogDescription>A live summary of the current worksheet.</DialogDescription>
         </DialogHeader>
         <div className="rounded-2xl border bg-background p-5">
