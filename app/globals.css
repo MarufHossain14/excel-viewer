@@ -1,26 +1,116 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f4ef;
+  --foreground: #1d211d;
+  --surface: #fbfaf6;
+  --surface-raised: #ffffff;
+  --muted: #6f756e;
+  --muted-foreground: #858a84;
+  --border: #dedfd8;
+  --border-strong: #c9ccc4;
+  --accent: #286247;
+  --accent-soft: #e1eee6;
+  --accent-foreground: #f7fff9;
+  --danger: #b74235;
+  --ring: #39775a;
+  --shadow: 0 16px 48px rgb(35 42 35 / 0.08);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+.dark {
+  --background: #151815;
+  --foreground: #edefe9;
+  --surface: #1b1f1b;
+  --surface-raised: #222722;
+  --muted: #a5aaa2;
+  --muted-foreground: #858c83;
+  --border: #303630;
+  --border-strong: #414941;
+  --accent: #78b28e;
+  --accent-soft: #253c2d;
+  --accent-foreground: #102317;
+  --danger: #ef8578;
+  --ring: #8bc29e;
+  --shadow: 0 20px 60px rgb(0 0 0 / 0.28);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  min-height: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes soft-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.animate-rise-in {
+  animation: rise-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
