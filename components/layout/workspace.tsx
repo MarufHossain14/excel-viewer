@@ -1,12 +1,25 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Inbox } from "lucide-react";
+import { Download, Inbox } from "lucide-react";
 import { ResponseViewer } from "@/components/forms/response-viewer";
+import { ReviewPanel } from "@/components/forms/review-panel";
+import { SettingsDialog } from "@/components/forms/settings-dialog";
+import { StatisticsDialog } from "@/components/forms/statistics-dialog";
 import { AppHeader } from "@/components/layout/app-header";
 import { ResponseSidebar } from "@/components/layout/response-sidebar";
 import { Button } from "@/components/ui/button";
+import { exportReviews } from "@/lib/export-reviews";
 import { useAppStore } from "@/store/use-app-store";
+import type { ReviewState } from "@/types/workbook";
+
+const EMPTY_REVIEW: ReviewState = {
+  reviewed: false,
+  starred: false,
+  rating: 0,
+  notes: "",
+  updatedAt: 0,
+};
 
 export function Workspace() {
   const workbook = useAppStore((state) => state.workbook);
@@ -17,6 +30,8 @@ export function Workspace() {
   const selectSheet = useAppStore((state) => state.selectSheet);
   const selectResponse = useAppStore((state) => state.selectResponse);
   const clearWorkbook = useAppStore((state) => state.clearWorkbook);
+  const updateReview = useAppStore((state) => state.updateReview);
+  const updateSettings = useAppStore((state) => state.updateSettings);
   const [query, setQuery] = useState("");
 
   const sheet = workbook?.sheets.find((candidate) => candidate.id === selectedSheetId);
@@ -69,7 +84,13 @@ export function Workspace() {
           selectSheet(id);
         }}
         onReset={() => void clearWorkbook()}
-      />
+      >
+        <StatisticsDialog responses={sheet.responses} reviews={reviews} />
+        <Button size="icon-sm" variant="ghost" onClick={() => exportReviews(workbook, reviews)} aria-label="Export review data">
+          <Download className="size-4" />
+        </Button>
+        <SettingsDialog settings={settings} onChange={updateSettings} />
+      </AppHeader>
       <div className="grid min-h-0 flex-1 grid-cols-[240px_1fr] lg:grid-cols-[288px_1fr]">
         <ResponseSidebar
           responses={filteredResponses}
@@ -94,6 +115,17 @@ export function Workspace() {
               onNext={() => navigate(1)}
               canPrevious={safeIndex > 0}
               canNext={safeIndex < filteredResponses.length - 1}
+              reviewPanel={
+                <ReviewPanel
+                  review={reviews[currentResponse.id] ?? EMPTY_REVIEW}
+                  onChange={(update) => updateReview(currentResponse.id, update)}
+                  onReviewed={() => {
+                    const wasReviewed = reviews[currentResponse.id]?.reviewed ?? false;
+                    updateReview(currentResponse.id, { reviewed: !wasReviewed });
+                    if (!wasReviewed && settings.autoAdvance) navigate(1);
+                  }}
+                />
+              }
             />
           ) : (
             <div className="grid min-h-full place-items-center text-center">

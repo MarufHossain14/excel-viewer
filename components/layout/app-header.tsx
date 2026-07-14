@@ -3,15 +3,17 @@
 import { Aperture, ChevronDown, FileSpreadsheet, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { WorkbookData } from "@/types/workbook";
+import type { ReactNode } from "react";
 
 interface AppHeaderProps {
   workbook: WorkbookData;
   selectedSheetId: string;
   onSelectSheet: (id: string) => void;
   onReset: () => void;
+  children?: ReactNode;
 }
 
-export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset }: AppHeaderProps) {
+export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset, children }: AppHeaderProps) {
   const selectedSheet = workbook.sheets.find((sheet) => sheet.id === selectedSheetId);
 
   return (
@@ -55,6 +57,8 @@ export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset }:
             {selectedSheet?.name} · {selectedSheet?.responses.length ?? 0} rows
           </span>
         )}
+        <span className="mx-0.5 h-5 w-px bg-border" aria-hidden="true" />
+        {children}
         <Button size="icon-sm" variant="ghost" onClick={onReset} aria-label="Open another file">
           <RotateCcw className="size-4" />
         </Button>
