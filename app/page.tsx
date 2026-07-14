@@ -1,9 +1,50 @@
 "use client";
 
-import { Aperture } from "lucide-react";
+import { useCallback } from "react";
+import { Aperture, FileSpreadsheet } from "lucide-react";
 import { UploadZone } from "@/components/forms/upload-zone";
+import { Button } from "@/components/ui/button";
+import { useHydrateStore } from "@/hooks/use-hydrate-store";
+import { parseWorkbookFile } from "@/lib/parser";
+import { useAppStore } from "@/store/use-app-store";
 
 export default function Home() {
+  const hydrated = useHydrateStore();
+  const workbook = useAppStore((state) => state.workbook);
+  const setWorkbook = useAppStore((state) => state.setWorkbook);
+  const clearWorkbook = useAppStore((state) => state.clearWorkbook);
+  const handleFile = useCallback(
+    async (file: File) => setWorkbook(await parseWorkbookFile(file)),
+    [setWorkbook],
+  );
+
+  if (!hydrated) {
+    return (
+      <main className="grid min-h-screen place-items-center" aria-label="Loading workspace">
+        <Aperture className="size-7 animate-pulse text-accent" aria-hidden="true" />
+      </main>
+    );
+  }
+
+  if (workbook) {
+    return (
+      <main className="grid min-h-screen place-items-center p-6">
+        <div className="w-full max-w-lg rounded-3xl border bg-surface-raised p-8 text-center shadow-[var(--shadow)]">
+          <FileSpreadsheet className="mx-auto size-9 text-accent" />
+          <h1 className="mt-4 font-serif text-2xl">{workbook.name}</h1>
+          <p className="mt-2 text-sm text-muted">
+            {workbook.sheets.length} {workbook.sheets.length === 1 ? "sheet" : "sheets"} ·{" "}
+            {workbook.sheets.reduce((total, sheet) => total + sheet.responses.length, 0)} responses
+          </p>
+          <p className="mt-6 text-sm text-muted">Your response workspace is ready.</p>
+          <Button className="mt-6" variant="secondary" onClick={() => void clearWorkbook()}>
+            Choose another file
+          </Button>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="relative grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden px-6 py-5 sm:px-10 sm:py-7">
       <div className="pointer-events-none absolute inset-0 opacity-55 [background-image:radial-gradient(circle_at_20%_10%,color-mix(in_srgb,var(--accent)_10%,transparent),transparent_26%),linear-gradient(to_right,color-mix(in_srgb,var(--border)_38%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--border)_38%,transparent)_1px,transparent_1px)] [background-size:auto,32px_32px,32px_32px]" />
@@ -29,7 +70,7 @@ export default function Home() {
             <br /> finally readable.
           </h1>
         </div>
-        <UploadZone onFile={async () => undefined} />
+        <UploadZone onFile={handleFile} />
       </section>
 
       <footer className="relative text-center text-[11px] text-muted">
