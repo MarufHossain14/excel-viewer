@@ -1,4 +1,4 @@
-import { openDB, type DBSchema } from "idb";
+import { openDB, type DBSchema, type IDBPDatabase } from "idb";
 import type { AppSettings, ReviewState, WorkbookData } from "@/types/workbook";
 
 export interface PersistedAppState {
@@ -16,16 +16,21 @@ interface FormLensDatabase extends DBSchema {
   };
 }
 
-const database = openDB<FormLensDatabase>("formlens", 1, {
-  upgrade(db) {
-    db.createObjectStore("state");
-  },
-});
+let database: Promise<IDBPDatabase<FormLensDatabase>> | undefined;
+
+function getDatabase() {
+  database ??= openDB<FormLensDatabase>("formlens", 1, {
+    upgrade(db) {
+      db.createObjectStore("state");
+    },
+  });
+  return database;
+}
 
 export async function loadAppState() {
-  return (await database).get("state", "current");
+  return (await getDatabase()).get("state", "current");
 }
 
 export async function saveAppState(state: PersistedAppState) {
-  await (await database).put("state", state, "current");
+  await (await getDatabase()).put("state", state, "current");
 }
