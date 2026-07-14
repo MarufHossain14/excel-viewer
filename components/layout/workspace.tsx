@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useState } from "react";
 import { Download, Inbox } from "lucide-react";
 import { ResponseViewer } from "@/components/forms/response-viewer";
 import { ReviewPanel } from "@/components/forms/review-panel";
@@ -33,13 +33,14 @@ export function Workspace() {
   const updateReview = useAppStore((state) => state.updateReview);
   const updateSettings = useAppStore((state) => state.updateSettings);
   const [query, setQuery] = useState("");
+  const deferredQuery = useDeferredValue(query);
 
   const sheet = workbook?.sheets.find((candidate) => candidate.id === selectedSheetId);
   const filteredResponses = useMemo(() => {
-    const normalized = query.trim().toLocaleLowerCase();
+    const normalized = deferredQuery.trim().toLocaleLowerCase();
     if (!normalized) return sheet?.responses ?? [];
     return (sheet?.responses ?? []).filter((response) => response.searchText.includes(normalized));
-  }, [query, sheet]);
+  }, [deferredQuery, sheet]);
 
   const currentIndex = filteredResponses.findIndex((response) => response.id === currentResponseId);
   const safeIndex = currentIndex >= 0 ? currentIndex : 0;
@@ -91,7 +92,7 @@ export function Workspace() {
         </Button>
         <SettingsDialog settings={settings} onChange={updateSettings} />
       </AppHeader>
-      <div className="grid min-h-0 flex-1 grid-cols-[240px_1fr] lg:grid-cols-[288px_1fr]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[220px_1fr] md:grid-cols-[240px_1fr] md:grid-rows-1 lg:grid-cols-[288px_1fr]">
         <ResponseSidebar
           responses={filteredResponses}
           totalResponses={sheet.responses.length}
@@ -108,7 +109,7 @@ export function Workspace() {
               response={currentResponse}
               position={safeIndex + 1}
               total={filteredResponses.length}
-              query={query}
+              query={deferredQuery}
               hideEmpty={settings.hideEmptyAnswers}
               compact={settings.compactMode}
               onPrevious={() => navigate(-1)}
