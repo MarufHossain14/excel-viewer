@@ -36,19 +36,19 @@ export function ResponseSidebar({
 }: ResponseSidebarProps) {
   const { containerRef, range, totalHeight, onScroll, scrollToIndex } = useVirtualList(
     responses.length,
-    65,
+    72,
   );
   const currentIndex = responses.findIndex((response) => response.id === currentId);
 
   useEffect(() => scrollToIndex(currentIndex), [currentIndex, scrollToIndex]);
 
   return (
-    <aside className="flex min-h-0 flex-col border-b bg-surface md:border-b-0 md:border-r" aria-label="Response navigation">
-      <div className="border-b p-4">
+    <aside className="flex min-h-0 flex-col border-b bg-surface/92 md:border-b-0 md:border-r" aria-label="Response navigation">
+      <div className="border-b px-4 pb-4 pt-5">
         <div className="mb-3 flex items-end justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.14em]">Responses</p>
-            <p className="mt-0.5 text-[11px] text-muted">
+            <p className="text-[13px] font-extrabold tracking-[-0.02em]">Responses</p>
+            <p className="mt-1 text-[12px] text-muted">
               {query ? `${responses.length} of ${totalResponses} found` : `${totalResponses} total`}
             </p>
           </div>
@@ -63,7 +63,7 @@ export function ResponseSidebar({
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
             placeholder="Search every answer…"
-            className="h-9 w-full rounded-xl border bg-surface-raised pl-9 pr-3 text-xs outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
+            className="h-10 w-full rounded-xl border bg-surface-raised pl-9 pr-3 text-[13px] shadow-sm outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
           />
         </label>
       </div>
@@ -85,15 +85,15 @@ export function ResponseSidebar({
                 aria-setsize={responses.length}
                 type="button"
                 className={cn(
-                  "absolute left-0 flex h-[61px] w-full items-start gap-3 rounded-xl px-3 py-3 text-left transition-colors",
-                  selected ? "bg-accent-soft text-foreground" : "hover:bg-background",
+                  "absolute left-0 flex h-[66px] w-full items-start gap-3 rounded-xl border border-transparent px-3 py-3 text-left transition-[background-color,border-color,box-shadow]",
+                  selected ? "border-accent/20 bg-accent-soft text-foreground shadow-sm" : "hover:bg-background/85",
                 )}
-                style={{ top: index * 65 }}
+                style={{ top: index * 72 }}
                 onClick={() => onSelect(response.id)}
               >
                 <span
                   className={cn(
-                    "mt-0.5 grid size-6 shrink-0 place-items-center rounded-lg border text-[10px] font-bold",
+                    "mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg border text-[11px] font-bold tabular-nums",
                     review?.reviewed
                       ? "border-accent bg-accent text-accent-foreground"
                       : "bg-surface-raised text-muted",
@@ -103,12 +103,12 @@ export function ResponseSidebar({
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="flex items-center gap-1.5">
-                    <span className="truncate text-xs font-semibold">
+                    <span className="truncate text-[13px] font-bold tracking-[-0.01em]">
                       <SearchHighlight text={title} query={query} />
                     </span>
                     {review?.starred && <Star className="size-3 fill-current text-[#c5962d]" />}
                   </span>
-                  <span className="mt-1 block truncate text-[11px] text-muted">
+                  <span className="mt-1 block truncate text-[12px] text-muted">
                     <SearchHighlight text={subtitle} query={query} />
                   </span>
                 </span>

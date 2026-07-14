@@ -13,7 +13,7 @@ interface ReviewPanelProps {
 
 export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) {
   return (
-    <section className="mt-4 rounded-[20px] border border-border-strong bg-surface-raised p-4 shadow-sm sm:p-5" aria-label="Private review">
+    <section className="mt-5 rounded-[22px] border border-border-strong bg-surface-raised p-4 shadow-[var(--shadow-soft)] sm:p-5" aria-label="Private review">
       <div className="flex flex-wrap items-center gap-3">
         <Button
           variant={review.reviewed ? "default" : "secondary"}
@@ -34,7 +34,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
           <Star className={cn("size-4", review.starred && "fill-current")} />
         </Button>
         <div className="ml-auto flex items-center gap-1" aria-label="Rating">
-          <span className="mr-2 hidden text-[11px] font-bold uppercase tracking-[0.12em] text-muted sm:inline">Rating</span>
+          <span className="mr-2 hidden text-[12px] font-bold tracking-[-0.01em] text-muted sm:inline">Rating</span>
           {[1, 2, 3, 4, 5].map((rating) => (
             <button
               key={rating}
@@ -50,7 +50,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
         </div>
       </div>
       <label className="mt-4 block">
-        <span className="mb-2 block text-[11px] font-bold uppercase tracking-[0.12em] text-muted">Private notes</span>
+        <span className="mb-2 block text-[12px] font-bold tracking-[-0.01em] text-muted">Private notes</span>
         <textarea
           name="private-notes"
           autoComplete="off"
@@ -58,7 +58,7 @@ export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) 
           onChange={(event) => onChange({ notes: event.target.value })}
           placeholder="Add context, follow-up questions, or a reminder…"
           rows={3}
-          className="w-full resize-y rounded-xl border bg-background/70 px-3.5 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
+          className="w-full resize-y rounded-xl border bg-background/65 px-4 py-3.5 text-[14px] leading-6 shadow-inner outline-none placeholder:text-muted-foreground focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/15"
         />
       </label>
     </section>

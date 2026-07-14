@@ -28,15 +28,15 @@ export function StatisticsDialog({ responses, reviews }: { responses: FormRespon
           <DialogTitle>Review Progress</DialogTitle>
           <DialogDescription>A live summary of the current worksheet.</DialogDescription>
         </DialogHeader>
-        <div className="rounded-2xl border bg-background p-5">
+        <div className="rounded-2xl border bg-background/65 p-5 shadow-inner">
           <div className="flex items-end justify-between">
-            <div><p className="text-xs font-bold uppercase tracking-[0.14em] text-muted">Completion</p><p className="mt-1 font-serif text-4xl">{completion}%</p></div>
-            <p className="text-sm text-muted">{reviewed} of {responses.length}</p>
+            <div><p className="text-[12px] font-bold text-muted">Completion</p><p className="mt-1 font-serif text-5xl tabular-nums tracking-[-0.04em]">{completion}%</p></div>
+            <p className="text-sm tabular-nums text-muted">{reviewed} of {responses.length}</p>
           </div>
           <div className="mt-4 h-2 overflow-hidden rounded-full bg-border"><div className="h-full rounded-full bg-accent transition-[width]" style={{ width: `${completion}%` }} /></div>
         </div>
         <dl className="mt-4 grid grid-cols-2 gap-3">
-          {metrics.map(([label, value]) => <div key={label} className="rounded-2xl border p-4"><dt className="text-xs text-muted">{label}</dt><dd className="mt-1 text-xl font-semibold">{value}</dd></div>)}
+          {metrics.map(([label, value]) => <div key={label} className="rounded-2xl border bg-background/35 p-4"><dt className="text-[12px] font-medium text-muted">{label}</dt><dd className="mt-1 text-2xl font-bold tabular-nums tracking-[-0.03em]">{value}</dd></div>)}
         </dl>
       </DialogContent>
     </Dialog>

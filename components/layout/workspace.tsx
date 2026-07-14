@@ -76,7 +76,7 @@ export function Workspace() {
   if (!workbook || !selectedSheetId || !sheet) return null;
 
   return (
-    <main id="main-content" className="flex h-screen min-h-[620px] flex-col overflow-hidden bg-background">
+    <main id="main-content" className="flex h-screen min-h-[620px] flex-col overflow-hidden bg-background [background-image:radial-gradient(circle_at_75%_0%,color-mix(in_srgb,var(--accent)_7%,transparent),transparent_34%)]">
       <AppHeader
         workbook={workbook}
         selectedSheetId={selectedSheetId}
@@ -102,7 +102,7 @@ export function Workspace() {
           onQueryChange={setQuery}
           onSelect={selectResponse}
         />
-        <section className="min-h-0 overflow-y-auto px-5 py-7 sm:px-8 lg:px-12 lg:py-10" aria-live="polite">
+        <section className="min-h-0 overflow-y-auto px-4 py-7 sm:px-8 lg:px-12 lg:py-11" aria-live="polite">
           {currentResponse ? (
             <ResponseViewer
               key={currentResponse.id}

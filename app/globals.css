@@ -2,20 +2,21 @@
 
 :root {
   color-scheme: light;
-  --background: #f5f4ef;
-  --foreground: #1d211d;
-  --surface: #fbfaf6;
-  --surface-raised: #ffffff;
-  --muted: #6f756e;
-  --muted-foreground: #858a84;
-  --border: #dedfd8;
-  --border-strong: #c9ccc4;
-  --accent: #286247;
-  --accent-soft: #e1eee6;
-  --accent-foreground: #f7fff9;
-  --danger: #b74235;
-  --ring: #39775a;
-  --shadow: 0 16px 48px rgb(35 42 35 / 0.08);
+  --background: #f2f4f0;
+  --foreground: #18201b;
+  --surface: #f8f9f6;
+  --surface-raised: #fffefa;
+  --muted: #5f6b63;
+  --muted-foreground: #737d75;
+  --border: #dce1da;
+  --border-strong: #c8d0c7;
+  --accent: #1f6246;
+  --accent-soft: #e2eee6;
+  --accent-foreground: #f8fff9;
+  --danger: #aa3f34;
+  --ring: #2d7352;
+  --shadow: 0 1px 2px rgb(26 40 31 / 0.04), 0 18px 50px rgb(26 40 31 / 0.08);
+  --shadow-soft: 0 8px 24px rgb(26 40 31 / 0.06);
 }
 
 @theme inline {
@@ -37,20 +38,21 @@
 
 .dark {
   color-scheme: dark;
-  --background: #151815;
-  --foreground: #edefe9;
-  --surface: #1b1f1b;
-  --surface-raised: #222722;
-  --muted: #a5aaa2;
-  --muted-foreground: #858c83;
-  --border: #303630;
-  --border-strong: #414941;
-  --accent: #78b28e;
-  --accent-soft: #253c2d;
-  --accent-foreground: #102317;
+  --background: #101511;
+  --foreground: #edf2ec;
+  --surface: #151b16;
+  --surface-raised: #1b231d;
+  --muted: #adb8af;
+  --muted-foreground: #919d93;
+  --border: #2b352d;
+  --border-strong: #3b493e;
+  --accent: #86c69d;
+  --accent-soft: #203a29;
+  --accent-foreground: #0c2114;
   --danger: #ef8578;
   --ring: #8bc29e;
-  --shadow: 0 20px 60px rgb(0 0 0 / 0.28);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.25), 0 24px 64px rgb(0 0 0 / 0.32);
+  --shadow-soft: 0 10px 30px rgb(0 0 0 / 0.2);
 }
 
 * {
@@ -75,6 +77,31 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
   text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+  letter-spacing: -0.008em;
+  line-height: 1.5;
+}
+
+.font-serif {
+  font-optical-sizing: auto;
+  letter-spacing: -0.018em;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: 999px;
+  background: var(--border-strong);
+  background-clip: padding-box;
 }
 
 button,

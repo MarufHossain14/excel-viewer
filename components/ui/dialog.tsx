@@ -17,7 +17,7 @@ export function DialogContent({
       <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-[#111711]/45 backdrop-blur-sm data-[state=closed]:animate-[fade-out_150ms_ease-in] data-[state=open]:animate-[rise-in_180ms_ease-out]" />
       <DialogPrimitive.Content
         className={cn(
-          "fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overscroll-contain overflow-y-auto rounded-[24px] border border-border-strong bg-surface-raised p-6 shadow-[var(--shadow)] focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:p-7",
+          "fixed left-1/2 top-1/2 z-50 max-h-[85vh] w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 overscroll-contain overflow-y-auto rounded-[26px] border border-border-strong bg-surface-raised p-6 shadow-[var(--shadow)] focus-visible:ring-2 focus-visible:ring-[var(--ring)] sm:p-8",
           className,
         )}
         {...props}
@@ -36,9 +36,9 @@ export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLD
 }
 
 export function DialogTitle({ className, ...props }: DialogPrimitive.DialogTitleProps) {
-  return <DialogPrimitive.Title className={cn("font-serif text-2xl font-medium tracking-tight", className)} {...props} />;
+  return <DialogPrimitive.Title className={cn("font-serif text-[28px] font-medium leading-tight tracking-[-0.035em]", className)} {...props} />;
 }
 
 export function DialogDescription({ className, ...props }: DialogPrimitive.DialogDescriptionProps) {
-  return <DialogPrimitive.Description className={cn("mt-1.5 text-sm leading-6 text-muted", className)} {...props} />;
+  return <DialogPrimitive.Description className={cn("mt-2 text-[14px] leading-6 text-muted", className)} {...props} />;
 }

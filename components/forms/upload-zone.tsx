@@ -58,10 +58,10 @@ export function UploadZone({ onFile }: UploadZoneProps) {
   );
 
   return (
-    <div className="w-full max-w-2xl animate-rise-in">
+    <div className="w-full max-w-[680px] animate-rise-in">
       <div
         className={cn(
-          "group relative overflow-hidden rounded-[28px] border border-border-strong bg-surface-raised p-3 shadow-[var(--shadow)] transition-[transform,background-color,border-color] duration-300",
+          "group relative overflow-hidden rounded-[30px] border border-border-strong bg-surface-raised p-3 shadow-[var(--shadow)] transition-[transform,background-color,border-color] duration-300",
           isDragging && "select-none scale-[1.01] border-accent bg-accent-soft",
         )}
         onDragEnter={(event) => {
@@ -78,19 +78,19 @@ export function UploadZone({ onFile }: UploadZoneProps) {
           void handleFile(event.dataTransfer.files[0]);
         }}
       >
-        <div className="pointer-events-none absolute -right-14 -top-20 size-52 rounded-full bg-accent/8 blur-2xl" />
-        <div className="flex min-h-80 flex-col items-center justify-center rounded-[22px] border border-dashed border-border-strong px-8 py-12 text-center">
-          <div className="mb-7 grid size-16 place-items-center rounded-2xl border border-border bg-accent-soft text-accent shadow-sm transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105">
+        <div className="pointer-events-none absolute -right-14 -top-20 size-52 rounded-full bg-accent/10 blur-2xl" />
+        <div className="flex min-h-[330px] flex-col items-center justify-center rounded-[23px] border border-dashed border-border-strong bg-[linear-gradient(145deg,color-mix(in_srgb,var(--surface-raised)_92%,transparent),color-mix(in_srgb,var(--accent-soft)_28%,var(--surface-raised)))] px-8 py-12 text-center">
+          <div className="mb-7 grid size-[68px] place-items-center rounded-[20px] border border-accent/20 bg-accent-soft text-accent shadow-[var(--shadow-soft)] transition-transform duration-300 group-hover:-rotate-2 group-hover:scale-105">
             {isLoading ? (
               <FileSpreadsheet className="size-7 animate-pulse" aria-hidden="true" />
             ) : (
               <Upload className="size-7" aria-hidden="true" />
             )}
           </div>
-          <h2 className="font-serif text-2xl font-medium tracking-tight">
+          <h2 className="text-pretty font-serif text-[26px] font-medium leading-tight tracking-[-0.03em]">
             {isDragging ? "Release to open" : "Bring your responses into focus"}
           </h2>
-          <p className="mt-2 max-w-sm text-sm leading-6 text-muted">
+          <p className="mt-3 max-w-sm text-[14px] leading-6 text-muted">
             Drop an Excel or CSV file here, or choose one from your computer.
           </p>
           <input
@@ -144,7 +144,7 @@ export function UploadZone({ onFile }: UploadZoneProps) {
           )}
         </div>
       </div>
-      <div className="mt-5 flex items-center justify-center gap-2 text-xs text-muted">
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-[12px] font-medium text-muted">
         <LockKeyhole className="size-3.5 text-accent" aria-hidden="true" />
         Your file never leaves this device
         <span aria-hidden="true">·</span>
