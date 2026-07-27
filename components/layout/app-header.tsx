@@ -1,6 +1,6 @@
 "use client";
 
-import { Aperture, ChevronDown, FileSpreadsheet, RotateCcw } from "lucide-react";
+import { Aperture, ChevronDown, FileSpreadsheet, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import type { WorkbookData } from "@/types/workbook";
@@ -31,7 +31,6 @@ export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset, c
           <FileSpreadsheet className="size-4 shrink-0 text-brand" aria-hidden="true" />
           <div className="min-w-0">
             <p className="max-w-48 truncate text-[13px] font-medium sm:max-w-64">{workbook.name}</p>
-            <p className="mt-0.5 text-xs text-muted">Private · Stored on this device</p>
           </div>
         </div>
       </div>
@@ -63,8 +62,9 @@ export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset, c
         {children}
         <Dialog>
           <DialogTrigger asChild>
-            <Button size="icon-sm" variant="ghost" aria-label="Open another file">
-              <RotateCcw className="size-4" aria-hidden="true" />
+            <Button size="sm" variant="ghost" className="px-2.5" aria-label="Open another file">
+              <FolderOpen className="size-4" aria-hidden="true" />
+              <span className="hidden lg:inline">Open file</span>
             </Button>
           </DialogTrigger>
           <DialogContent>
@@ -76,7 +76,7 @@ export function AppHeader({ workbook, selectedSheetId, onSelectSheet, onReset, c
             </DialogHeader>
             <div className="flex justify-end gap-2">
               <DialogTrigger asChild><Button variant="secondary">Keep Workbook</Button></DialogTrigger>
-              <Button variant="danger" onClick={onReset}>Remove & Open Another</Button>
+              <Button variant="danger" onClick={onReset}>Open another file</Button>
             </div>
           </DialogContent>
         </Dialog>

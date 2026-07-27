@@ -32,16 +32,13 @@ export default function Home() {
   }
 
   return (
-    <main id="main-content" className="grid min-h-screen grid-rows-[auto_1fr_auto] overflow-hidden bg-background px-6 py-5 sm:px-10 sm:py-7">
-      <header className="flex items-center justify-between">
+    <main id="main-content" className="grid min-h-screen grid-rows-[auto_1fr] overflow-hidden bg-background px-6 py-5 sm:px-10 sm:py-7">
+      <header>
         <div className="flex items-center gap-2.5">
           <span className="grid size-8 place-items-center rounded-lg bg-foreground text-background">
             <Aperture className="size-[18px]" aria-hidden="true" />
           </span>
           <span className="text-sm font-semibold tracking-[-0.02em]">FormLens</span>
-        </div>
-        <div className="rounded-md border border-border bg-surface-raised px-2.5 py-1.5 text-xs font-medium text-muted">
-          LOCAL WORKSPACE
         </div>
       </header>
 
@@ -57,10 +54,6 @@ export default function Home() {
         </div>
         <UploadZone onFile={handleFile} />
       </section>
-
-      <footer className="text-center text-xs text-muted">
-        Private by design · Stored locally in your browser
-      </footer>
     </main>
   );
 }

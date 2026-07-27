@@ -2,18 +2,28 @@
 
 import { useEffect } from "react";
 import { Check, Search, Star } from "lucide-react";
+import { ResponseControlsDialog } from "@/components/forms/response-controls-dialog";
 import { SearchHighlight } from "@/components/forms/search-highlight";
 import { useVirtualList } from "@/hooks/use-virtual-list";
+import {
+  createDefaultResponseView,
+  type ResponseViewOptions,
+} from "@/lib/response-view";
 import { cn } from "@/lib/utils";
 import type { FormResponse, ReviewState } from "@/types/workbook";
 
 interface ResponseSidebarProps {
   responses: FormResponse[];
+  allResponses: FormResponse[];
   totalResponses: number;
   currentId: string | null;
   query: string;
   reviews: Record<string, ReviewState>;
+  viewOptions: ResponseViewOptions;
+  isFiltered: boolean;
   onQueryChange: (query: string) => void;
+  onViewOptionsChange: (options: ResponseViewOptions) => void;
+  onClearView: () => void;
   onSelect: (id: string) => void;
 }
 
@@ -27,11 +37,16 @@ function responseIdentity(response: FormResponse) {
 
 export function ResponseSidebar({
   responses,
+  allResponses,
   totalResponses,
   currentId,
   query,
   reviews,
+  viewOptions,
+  isFiltered,
   onQueryChange,
+  onViewOptionsChange,
+  onClearView,
   onSelect,
 }: ResponseSidebarProps) {
   const { containerRef, range, totalHeight, onScroll, scrollToIndex } = useVirtualList(
@@ -45,13 +60,19 @@ export function ResponseSidebar({
   return (
     <aside className="flex min-h-0 flex-col border-b bg-surface md:border-b-0 md:border-r" aria-label="Response navigation">
       <div className="border-b px-4 pb-4 pt-5">
-        <div className="mb-3 flex items-end justify-between">
+        <div className="mb-3 flex items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold">Responses</p>
             <p className="mt-1 text-[12px] text-muted">
-              {query ? `${responses.length} of ${totalResponses} found` : `${totalResponses} total`}
+              {isFiltered ? `${responses.length} of ${totalResponses} shown` : `${totalResponses} total`}
             </p>
           </div>
+          <ResponseControlsDialog
+            responses={allResponses}
+            options={viewOptions}
+            onChange={onViewOptionsChange}
+            onReset={() => onViewOptionsChange(createDefaultResponseView())}
+          />
         </div>
         <label className="relative block">
           <span className="sr-only">Search all responses</span>
@@ -119,7 +140,18 @@ export function ResponseSidebar({
         ) : (
           <div className="px-4 py-12 text-center">
             <p className="text-sm font-semibold">No matching responses</p>
-            <p className="mt-1 text-xs leading-5 text-muted">Try a different name, email, or answer.</p>
+            <p className="mt-1 text-xs leading-5 text-muted">
+              Try a different search or adjust your filters.
+            </p>
+            {isFiltered && (
+              <button
+                type="button"
+                className="mt-3 text-xs font-semibold text-foreground underline underline-offset-4"
+                onClick={onClearView}
+              >
+                Clear search & filters
+              </button>
+            )}
           </div>
         )}
       </div>

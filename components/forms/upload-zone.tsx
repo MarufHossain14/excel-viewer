@@ -1,10 +1,9 @@
 "use client";
 
 import { useCallback, useRef, useState } from "react";
-import { FileSpreadsheet, LockKeyhole, Upload, X } from "lucide-react";
+import { FileSpreadsheet, LockKeyhole, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { cn, formatFileSize } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const ACCEPTED_EXTENSIONS = ["xlsx", "xls", "csv"];
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -16,8 +15,7 @@ interface UploadZoneProps {
 export function UploadZone({ onFile }: UploadZoneProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
-  const [progress, setProgress] = useState(0);
+  const [fileName, setFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -34,23 +32,15 @@ export function UploadZone({ onFile }: UploadZoneProps) {
         return;
       }
 
-      setFile(candidate);
+      setFileName(candidate.name);
       setError(null);
-      setProgress(12);
       setIsLoading(true);
-      const timer = window.setInterval(
-        () => setProgress((current) => Math.min(current + 9, 88)),
-        120,
-      );
       try {
         await onFile(candidate);
-        setProgress(100);
       } catch (cause) {
         setError(cause instanceof Error ? cause.message : "We couldn’t read that file.");
-        setFile(null);
-        setProgress(0);
+        setFileName(null);
       } finally {
-        window.clearInterval(timer);
         setIsLoading(false);
       }
     },
@@ -106,34 +96,18 @@ export function UploadZone({ onFile }: UploadZoneProps) {
             onClick={() => inputRef.current?.click()}
             disabled={isLoading}
           >
-            <Upload className="size-4" aria-hidden="true" />
-            Choose File
+            {isLoading ? (
+              <FileSpreadsheet className="size-4 animate-pulse" aria-hidden="true" />
+            ) : (
+              <Upload className="size-4" aria-hidden="true" />
+            )}
+            {isLoading ? "Reading file…" : "Choose File"}
           </Button>
 
-          {file && (
-            <div className="mt-7 w-full max-w-sm rounded-lg border border-border bg-surface p-3 text-left">
-              <div className="flex items-center gap-3">
-                <FileSpreadsheet className="size-5 text-accent" aria-hidden="true" />
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-sm font-semibold">{file.name}</p>
-                  <p className="text-xs text-muted">{formatFileSize(file.size)}</p>
-                </div>
-                {!isLoading && (
-                  <button
-                    type="button"
-                    className="rounded-md p-1 text-muted hover:bg-border"
-                    onClick={() => setFile(null)}
-                    aria-label="Remove selected file"
-                  >
-                    <X className="size-4" />
-                  </button>
-                )}
-              </div>
-              <Progress className="mt-3" value={progress} />
-              <p className="mt-2 text-xs text-muted" aria-live="polite">
-                {progress === 100 ? "Ready" : "Reading workbook…"}
-              </p>
-            </div>
+          {isLoading && fileName && (
+            <p className="mt-5 max-w-sm truncate text-xs font-medium text-muted" aria-live="polite">
+              Reading {fileName}
+            </p>
           )}
 
           {error && (

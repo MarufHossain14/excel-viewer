@@ -10,6 +10,12 @@ import { AppHeader } from "@/components/layout/app-header";
 import { ResponseSidebar } from "@/components/layout/response-sidebar";
 import { Button } from "@/components/ui/button";
 import { exportReviews } from "@/lib/export-reviews";
+import {
+  applyResponseView,
+  createDefaultResponseView,
+  isResponseViewActive,
+  type ResponseViewOptions,
+} from "@/lib/response-view";
 import { useAppStore } from "@/store/use-app-store";
 import type { ReviewState } from "@/types/workbook";
 
@@ -33,34 +39,49 @@ export function Workspace() {
   const updateReview = useAppStore((state) => state.updateReview);
   const updateSettings = useAppStore((state) => state.updateSettings);
   const [query, setQuery] = useState("");
+  const [viewOptions, setViewOptions] = useState<ResponseViewOptions>(
+    createDefaultResponseView,
+  );
   const deferredQuery = useDeferredValue(query);
 
   const sheet = workbook?.sheets.find((candidate) => candidate.id === selectedSheetId);
-  const filteredResponses = useMemo(() => {
-    const normalized = deferredQuery.trim().toLocaleLowerCase();
-    if (!normalized) return sheet?.responses ?? [];
-    return (sheet?.responses ?? []).filter((response) => response.searchText.includes(normalized));
-  }, [deferredQuery, sheet]);
+  const visibleResponses = useMemo(
+    () => applyResponseView(
+      sheet?.responses ?? [],
+      reviews,
+      deferredQuery,
+      viewOptions,
+    ),
+    [deferredQuery, reviews, sheet, viewOptions],
+  );
+  const hasActiveView =
+    Boolean(query.trim())
+    || isResponseViewActive(viewOptions);
 
-  const currentIndex = filteredResponses.findIndex((response) => response.id === currentResponseId);
+  const currentIndex = visibleResponses.findIndex((response) => response.id === currentResponseId);
   const safeIndex = currentIndex >= 0 ? currentIndex : 0;
-  const currentResponse = filteredResponses[safeIndex];
+  const currentResponse = visibleResponses[safeIndex];
 
   useEffect(() => {
-    if (filteredResponses.length && currentIndex < 0) selectResponse(filteredResponses[0].id);
-  }, [currentIndex, filteredResponses, selectResponse]);
+    if (visibleResponses.length && currentIndex < 0) selectResponse(visibleResponses[0].id);
+  }, [currentIndex, selectResponse, visibleResponses]);
 
   const navigate = useCallback(
     (offset: number) => {
       const nextIndex = Math.min(
-        filteredResponses.length - 1,
+        visibleResponses.length - 1,
         Math.max(0, safeIndex + offset),
       );
-      const next = filteredResponses[nextIndex];
+      const next = visibleResponses[nextIndex];
       if (next) selectResponse(next.id);
     },
-    [filteredResponses, safeIndex, selectResponse],
+    [safeIndex, selectResponse, visibleResponses],
   );
+
+  const clearView = useCallback(() => {
+    setQuery("");
+    setViewOptions(createDefaultResponseView());
+  }, []);
 
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
@@ -82,6 +103,7 @@ export function Workspace() {
         selectedSheetId={selectedSheetId}
         onSelectSheet={(id) => {
           setQuery("");
+          setViewOptions(createDefaultResponseView());
           selectSheet(id);
         }}
         onReset={() => void clearWorkbook()}
@@ -94,12 +116,17 @@ export function Workspace() {
       </AppHeader>
       <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[220px_1fr] md:grid-cols-[240px_1fr] md:grid-rows-1 lg:grid-cols-[288px_1fr]">
         <ResponseSidebar
-          responses={filteredResponses}
+          responses={visibleResponses}
+          allResponses={sheet.responses}
           totalResponses={sheet.responses.length}
           currentId={currentResponseId}
           query={query}
           reviews={reviews}
+          viewOptions={viewOptions}
+          isFiltered={hasActiveView}
           onQueryChange={setQuery}
+          onViewOptionsChange={setViewOptions}
+          onClearView={clearView}
           onSelect={selectResponse}
         />
         <section className="min-h-0 overflow-y-auto px-4 py-6 sm:px-8 lg:px-12 lg:py-8" aria-live="polite">
@@ -108,14 +135,14 @@ export function Workspace() {
               key={currentResponse.id}
               response={currentResponse}
               position={safeIndex + 1}
-              total={filteredResponses.length}
+              total={visibleResponses.length}
               query={deferredQuery}
               hideEmpty={settings.hideEmptyAnswers}
               compact={settings.compactMode}
               onPrevious={() => navigate(-1)}
               onNext={() => navigate(1)}
               canPrevious={safeIndex > 0}
-              canNext={safeIndex < filteredResponses.length - 1}
+              canNext={safeIndex < visibleResponses.length - 1}
               reviewPanel={
                 <ReviewPanel
                   review={reviews[currentResponse.id] ?? EMPTY_REVIEW}
@@ -134,11 +161,13 @@ export function Workspace() {
                 <Inbox className="mx-auto size-8 text-muted" />
                 <p className="mt-4 text-lg font-semibold">Nothing to review here</p>
                 <p className="mt-1 text-sm text-muted">
-                  {query ? "Clear your search to see every response." : "This worksheet has no response rows."}
+                  {hasActiveView
+                    ? "Adjust your search or filters to see more responses."
+                    : "This worksheet has no response rows."}
                 </p>
-                {query && (
-                  <Button className="mt-5" variant="secondary" onClick={() => setQuery("")}>
-                    Clear search
+                {hasActiveView && (
+                  <Button className="mt-5" variant="secondary" onClick={clearView}>
+                    Clear search & filters
                   </Button>
                 )}
               </div>

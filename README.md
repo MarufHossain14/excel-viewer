@@ -5,7 +5,7 @@ Turns Excel and CSV form submissions into a focused, one-response-at-a-time revi
 ## Features
 
 - Drag-and-drop `.xlsx`, `.xls`, and `.csv` import with friendly validation
-- Instant worksheet switching and response search
+- Instant worksheet switching, response search, category filters, and sorting
 - Adaptive short- and long-answer layout with empty-field controls
 - Reviewed status, stars, five-point ratings, and private notes
 - Progress statistics and JSON metadata export
