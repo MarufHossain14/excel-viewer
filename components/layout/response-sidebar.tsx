@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
-import { Check, Search, Star } from "lucide-react";
+import { Check, ChevronDown, Search, Star, X } from "lucide-react";
 import { ResponseControlsDialog } from "@/components/forms/response-controls-dialog";
 import { SearchHighlight } from "@/components/forms/search-highlight";
 import { useVirtualList } from "@/hooks/use-virtual-list";
-import {
-  createDefaultResponseView,
-  type ResponseViewOptions,
-} from "@/lib/response-view";
 import { cn } from "@/lib/utils";
+import type { ResponseViewOptions, ReviewFilter } from "@/lib/response-view";
 import type { FormResponse, ReviewState } from "@/types/workbook";
 
 interface ResponseSidebarProps {
@@ -31,9 +28,16 @@ function responseIdentity(response: FormResponse) {
   const populated = response.fields.filter((field) => field.value !== null);
   return {
     title: populated[0]?.searchValue || `Response ${response.rowNumber - 1}`,
-    subtitle: populated[1]?.searchValue || `Row ${response.rowNumber}`,
+    subtitle: populated[1]?.searchValue || `Spreadsheet row ${response.rowNumber}`,
   };
 }
+
+const QUICK_FILTERS: Array<{ value: ReviewFilter; label: string }> = [
+  { value: "all", label: "All" },
+  { value: "unreviewed", label: "Open" },
+  { value: "reviewed", label: "Done" },
+  { value: "starred", label: "Starred" },
+];
 
 export function ResponseSidebar({
   responses,
@@ -51,19 +55,23 @@ export function ResponseSidebar({
 }: ResponseSidebarProps) {
   const { containerRef, range, totalHeight, onScroll, scrollToIndex } = useVirtualList(
     responses.length,
-    72,
+    68,
   );
   const currentIndex = responses.findIndex((response) => response.id === currentId);
 
   useEffect(() => scrollToIndex(currentIndex), [currentIndex, scrollToIndex]);
 
+  function setQuickFilter(reviewFilter: ReviewFilter) {
+    onViewOptionsChange({ ...viewOptions, reviewFilter });
+  }
+
   return (
-    <aside className="flex min-h-0 flex-col border-b bg-surface md:border-b-0 md:border-r" aria-label="Response navigation">
-      <div className="border-b px-4 pb-4 pt-5">
+    <aside className="flex min-h-0 flex-col border-b bg-surface-raised md:border-b-0 md:border-r" aria-label="Response navigation">
+      <div className="border-b px-3 py-3 sm:px-4 md:py-4">
         <div className="mb-3 flex items-center justify-between gap-3">
           <div>
-            <p className="text-sm font-semibold">Responses</p>
-            <p className="mt-1 text-[12px] text-muted">
+            <h2 className="text-sm font-semibold">Responses</h2>
+            <p className="mt-0.5 text-[11px] text-muted">
               {isFiltered ? `${responses.length} of ${totalResponses} shown` : `${totalResponses} total`}
             </p>
           </div>
@@ -71,90 +79,152 @@ export function ResponseSidebar({
             responses={allResponses}
             options={viewOptions}
             onChange={onViewOptionsChange}
-            onReset={() => onViewOptionsChange(createDefaultResponseView())}
+            onReset={() => onViewOptionsChange({
+              reviewFilter: "all",
+              filterFieldId: null,
+              selectedValues: [],
+              sortKey: "original",
+              sortDirection: "asc",
+            })}
           />
         </div>
+
         <label className="relative block">
-          <span className="sr-only">Search all responses</span>
-          <Search className="pointer-events-none absolute left-3 top-2.5 size-4 text-muted" />
+          <span className="sr-only">Search every answer</span>
+          <Search className="pointer-events-none absolute left-3 top-2.5 size-4 text-muted" aria-hidden="true" />
           <input
             type="search"
             name="response-search"
             autoComplete="off"
             value={query}
             onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="Search every answer…"
-            className="h-9 w-full rounded-lg border bg-surface-raised pl-9 pr-3 text-[13px] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15"
+            placeholder="Search responses…"
+            className="h-9 w-full rounded-lg border bg-background pl-9 pr-8 text-[13px] text-foreground placeholder:text-muted-foreground focus-visible:border-ring"
           />
+          {query && (
+            <button
+              type="button"
+              className="absolute right-1.5 top-1.5 rounded-md p-1 text-muted hover:bg-accent-soft hover:text-foreground"
+              onClick={() => onQueryChange("")}
+              aria-label="Clear search"
+            >
+              <X className="size-3.5" />
+            </button>
+          )}
         </label>
+
+        <div className="mt-2 grid grid-cols-4 gap-1 rounded-lg bg-surface p-1" role="group" aria-label="Filter by review status">
+          {QUICK_FILTERS.map((filter) => (
+            <button
+              key={filter.value}
+              type="button"
+              className={cn(
+                "whitespace-nowrap rounded-md px-1 py-1.5 text-[11px] font-medium transition-colors",
+                viewOptions.reviewFilter === filter.value
+                  ? "bg-surface-raised text-foreground shadow-sm"
+                  : "text-muted hover:text-foreground",
+              )}
+              onClick={() => setQuickFilter(filter.value)}
+              aria-pressed={viewOptions.reviewFilter === filter.value}
+            >
+              {filter.label}
+            </button>
+          ))}
+        </div>
+
+        {responses.length > 0 && (
+          <label className="relative mt-2 block md:hidden">
+            <span className="sr-only">Current response</span>
+            <select
+              name="current-response"
+              value={currentIndex >= 0 ? responses[currentIndex].id : responses[0].id}
+              onChange={(event) => onSelect(event.target.value)}
+              className="h-10 w-full appearance-none rounded-lg border bg-surface-raised pl-3 pr-8 text-sm font-medium text-foreground focus-visible:border-ring"
+            >
+              {responses.map((response, index) => {
+                const { title } = responseIdentity(response);
+                return <option key={response.id} value={response.id}>{index + 1}. {title}</option>;
+              })}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-3 top-3 size-4 text-muted" aria-hidden="true" />
+          </label>
+        )}
       </div>
 
-      <div ref={containerRef} onScroll={onScroll} className="min-h-0 flex-1 overflow-y-auto" role="listbox" aria-label="Responses">
+      <div ref={containerRef} onScroll={onScroll} className="scroll-region hidden min-h-0 flex-1 overflow-y-auto md:block" role="listbox" aria-label="Responses">
         {responses.length ? (
-          <div className="relative mx-2" style={{ height: totalHeight }}>
-          {responses.slice(range.start, range.end).map((response, visibleIndex) => {
-            const index = range.start + visibleIndex;
-            const { title, subtitle } = responseIdentity(response);
-            const review = reviews[response.id];
-            const selected = currentId === response.id;
-            return (
-              <button
-                key={response.id}
-                role="option"
-                aria-selected={selected}
-                aria-posinset={index + 1}
-                aria-setsize={responses.length}
-                type="button"
-                className={cn(
-                  "absolute left-0 flex h-[66px] w-full items-start gap-3 rounded-lg border border-transparent px-3 py-3 text-left transition-[background-color,border-color] before:absolute before:bottom-2 before:left-0 before:top-2 before:w-0.5 before:rounded-full before:bg-transparent",
-                  selected ? "border-border bg-surface-raised text-foreground before:bg-brand" : "hover:bg-surface-raised",
-                )}
-                style={{ top: index * 72 }}
-                onClick={() => onSelect(response.id)}
-              >
-                <span
+          <div className="relative" style={{ height: totalHeight }}>
+            {responses.slice(range.start, range.end).map((response, visibleIndex) => {
+              const index = range.start + visibleIndex;
+              const { title, subtitle } = responseIdentity(response);
+              const review = reviews[response.id];
+              const selected = currentId === response.id;
+              return (
+                <button
+                  key={response.id}
+                  role="option"
+                  aria-selected={selected}
+                  aria-posinset={index + 1}
+                  aria-setsize={responses.length}
+                  type="button"
                   className={cn(
-                    "mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg border text-[11px] font-bold tabular-nums",
-                    review?.reviewed
-                      ? "border-foreground bg-foreground text-background"
-                      : "bg-surface-raised text-muted",
+                    "absolute left-2 flex h-16 w-[calc(100%-1rem)] items-center gap-2.5 rounded-lg border px-2.5 text-left transition-colors",
+                    selected
+                      ? "border-border-strong bg-accent-soft"
+                      : "border-transparent hover:bg-surface",
                   )}
+                  style={{ top: index * 68 + 2 }}
+                  onClick={() => onSelect(response.id)}
                 >
-                  {review?.reviewed ? <Check className="size-3.5" /> : index + 1}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="flex items-center gap-1.5">
-                    <span className="truncate text-[13px] font-medium">
-                      <SearchHighlight text={title} query={query} />
+                  <span className={cn(
+                    "grid size-7 shrink-0 place-items-center rounded-md border bg-surface-raised text-[11px] tabular-nums text-muted",
+                    review?.reviewed && "border-accent/20 text-accent",
+                  )}>
+                    {review?.reviewed ? <Check className="size-3.5" aria-hidden="true" /> : index + 1}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex items-center gap-1.5">
+                      <span className="truncate text-[13px] font-medium">
+                        <SearchHighlight text={title} query={query} />
+                      </span>
+                      {review?.starred && (
+                        <>
+                          <Star className="size-3 shrink-0 fill-current text-accent" aria-hidden="true" />
+                          <span className="sr-only">Starred</span>
+                        </>
+                      )}
                     </span>
-                    {review?.starred && <Star className="size-3 fill-current text-brand" />}
+                    <span className="mt-0.5 block truncate text-[11px] text-muted">
+                      <SearchHighlight text={subtitle} query={query} />
+                    </span>
                   </span>
-                  <span className="mt-1 block truncate text-[12px] text-muted">
-                    <SearchHighlight text={subtitle} query={query} />
-                  </span>
-                </span>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
           </div>
         ) : (
-          <div className="px-4 py-12 text-center">
-            <p className="text-sm font-semibold">No matching responses</p>
-            <p className="mt-1 text-xs leading-5 text-muted">
-              Try a different search or adjust your filters.
-            </p>
+          <div className="px-4 py-10 text-center">
+            <p className="text-sm font-medium">No responses found</p>
+            <p className="mt-1 text-xs text-muted">Try another search or filter.</p>
             {isFiltered && (
-              <button
-                type="button"
-                className="mt-3 text-xs font-semibold text-foreground underline underline-offset-4"
-                onClick={onClearView}
-              >
-                Clear search & filters
+              <button type="button" className="mt-3 text-xs font-medium text-accent underline underline-offset-4" onClick={onClearView}>
+                Show everything
               </button>
             )}
           </div>
         )}
       </div>
+
+      {responses.length === 0 && (
+        <div className="px-4 py-5 text-center md:hidden">
+          <p className="text-sm font-medium">No responses found</p>
+          {isFiltered && (
+            <button type="button" className="mt-2 text-xs font-medium text-accent underline underline-offset-4" onClick={onClearView}>
+              Show everything
+            </button>
+          )}
+        </div>
+      )}
     </aside>
   );
 }

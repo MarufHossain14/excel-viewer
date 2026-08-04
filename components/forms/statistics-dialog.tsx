@@ -13,22 +13,22 @@ export function StatisticsDialog({ responses, reviews }: { responses: FormRespon
   const completion = responses.length ? Math.round((reviewed / responses.length) * 100) : 0;
   const metrics = [
     ["Total responses", responses.length],
-    ["Reviewed", reviewed],
-    ["Remaining", Math.max(0, responses.length - reviewed)],
+    ["Finished", reviewed],
+    ["Still to review", Math.max(0, responses.length - reviewed)],
     ["Average rating", average ? average.toFixed(1) : "—"],
   ];
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="icon-sm" variant="ghost" aria-label="View statistics"><BarChart3 className="size-4" /></Button>
+        <Button size="icon-sm" variant="ghost" aria-label="View progress summary" title="Progress summary"><BarChart3 className="size-4" /></Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Review Progress</DialogTitle>
-          <DialogDescription>A live summary of the current worksheet.</DialogDescription>
+          <DialogTitle>Your progress</DialogTitle>
+          <DialogDescription>A quick look at how much you’ve finished in this sheet.</DialogDescription>
         </DialogHeader>
-        <div className="rounded-lg border bg-surface p-5">
+        <div className="rounded-xl border bg-surface p-5">
           <div className="flex items-end justify-between">
             <div><p className="text-xs font-medium text-muted">Completion</p><p className="mt-1 font-mono text-4xl font-semibold tabular-nums tracking-[-0.04em]">{completion}%</p></div>
             <p className="text-sm tabular-nums text-muted">{reviewed} of {responses.length}</p>

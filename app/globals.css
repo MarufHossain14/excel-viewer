@@ -3,21 +3,26 @@
 :root {
   color-scheme: light;
   --background: #f7f7f7;
-  --foreground: #1a1a1a;
-  --surface: #fafafa;
+  --foreground: #1f1f1f;
+  --surface: #f2f2f2;
   --surface-raised: #ffffff;
   --muted: #666666;
-  --muted-foreground: #858585;
-  --border: #e5e5e5;
-  --border-strong: #d4d4d4;
-  --accent: #1a1a1a;
-  --accent-soft: #f0f0f0;
+  --muted-foreground: #8a8a8a;
+  --border: #e4e4e4;
+  --border-strong: #d2d2d2;
+  --accent: #252525;
+  --accent-soft: #eeeeee;
   --accent-foreground: #ffffff;
-  --brand: #f6821f;
-  --danger: #d92d20;
-  --ring: #0070f3;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.06);
-  --shadow-soft: 0 1px 3px rgb(0 0 0 / 0.06);
+  --brand: #252525;
+  --brand-soft: #eeeeee;
+  --danger: #b42318;
+  --ring: #4a4a4a;
+  --shadow: 0 8px 30px rgb(0 0 0 / 0.08);
+  --shadow-soft: 0 1px 3px rgb(0 0 0 / 0.08);
+  --font-sans: "Avenir Next", Avenir, "Segoe UI", sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --answer-font-size: 15px;
+  --long-answer-font-size: 16px;
 }
 
 @theme inline {
@@ -33,6 +38,7 @@
   --color-accent-soft: var(--accent-soft);
   --color-accent-foreground: var(--accent-foreground);
   --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
   --color-danger: var(--danger);
   --color-ring: var(--ring);
   --font-sans: var(--font-sans);
@@ -41,21 +47,22 @@
 
 .dark {
   color-scheme: dark;
-  --background: #0a0a0a;
-  --foreground: #ededed;
-  --surface: #0f0f0f;
-  --surface-raised: #141414;
-  --muted: #a1a1a1;
+  --background: #121212;
+  --foreground: #f1f1f1;
+  --surface: #181818;
+  --surface-raised: #202020;
+  --muted: #a3a3a3;
   --muted-foreground: #7d7d7d;
-  --border: #292929;
-  --border-strong: #3a3a3a;
-  --accent: #ededed;
-  --accent-soft: #1f1f1f;
-  --accent-foreground: #0a0a0a;
-  --brand: #ff8a24;
-  --danger: #ef8578;
-  --ring: #3291ff;
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 12px 28px rgb(0 0 0 / 0.35);
+  --border: #303030;
+  --border-strong: #424242;
+  --accent: #f1f1f1;
+  --accent-soft: #2a2a2a;
+  --accent-foreground: #171717;
+  --brand: #f1f1f1;
+  --brand-soft: #2a2a2a;
+  --danger: #f08b7d;
+  --ring: #c5c5c5;
+  --shadow: 0 12px 30px rgb(0 0 0 / 0.3);
   --shadow-soft: 0 1px 3px rgb(0 0 0 / 0.3);
 }
 
@@ -69,11 +76,13 @@ body {
 }
 
 html[data-font-size="small"] {
-  font-size: 14px;
+  --answer-font-size: 14px;
+  --long-answer-font-size: 15px;
 }
 
 html[data-font-size="large"] {
-  font-size: 18px;
+  --answer-font-size: 17px;
+  --long-answer-font-size: 18px;
 }
 
 body {
@@ -84,6 +93,7 @@ body {
   font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
   letter-spacing: -0.005em;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 * {
@@ -103,16 +113,38 @@ body {
   background-clip: padding-box;
 }
 
-button,
-input,
-textarea,
-select {
-  font: inherit;
+@layer base {
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
 }
 
 button:not(:disabled) {
   cursor: pointer;
   touch-action: manipulation;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.response-answer {
+  font-size: var(--answer-font-size);
+}
+
+.response-answer-long {
+  font-size: var(--long-answer-font-size);
+}
+
+.scroll-region {
+  overscroll-behavior: contain;
 }
 
 ::selection {

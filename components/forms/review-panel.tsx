@@ -13,54 +13,55 @@ interface ReviewPanelProps {
 
 export function ReviewPanel({ review, onChange, onReviewed }: ReviewPanelProps) {
   return (
-    <section className="mt-4 rounded-xl border border-border bg-surface-raised p-4 shadow-[var(--shadow-soft)] sm:p-5" aria-label="Private review">
-      <div className="flex flex-wrap items-center gap-3">
-        <Button
-          variant={review.reviewed ? "default" : "secondary"}
-          onClick={onReviewed}
-          aria-pressed={review.reviewed}
-        >
-          <Check className="size-4" />
-          {review.reviewed ? "Reviewed" : "Mark Reviewed"}
-        </Button>
+    <section className="mt-4 rounded-xl border bg-surface-raised p-4 shadow-[var(--shadow-soft)]" aria-label="Review notes">
+      <textarea
+        name="private-notes"
+        aria-label="Private note"
+        autoComplete="off"
+        value={review.notes}
+        onChange={(event) => onChange({ notes: event.target.value })}
+        placeholder="Add a private note (optional)…"
+        rows={2}
+        className="w-full resize-y rounded-lg border bg-background px-3 py-2.5 text-sm leading-6 placeholder:text-muted-foreground focus-visible:border-ring"
+      />
+
+      <div className="mt-3 grid grid-cols-[auto_1fr] items-center gap-2 sm:flex">
         <Button
           variant="secondary"
-          size="icon"
-          className={cn(review.starred && "border-brand text-brand")}
+          size="sm"
+          className={cn(review.starred && "border-accent bg-accent-soft text-accent")}
           onClick={() => onChange({ starred: !review.starred })}
-          aria-label={review.starred ? "Remove star" : "Star response"}
           aria-pressed={review.starred}
         >
-          <Star className={cn("size-4", review.starred && "fill-current")} />
+          <Star className={cn("size-3.5", review.starred && "fill-current")} aria-hidden="true" />
+          {review.starred ? "Starred" : "Star"}
         </Button>
-        <div className="ml-auto flex items-center gap-1" aria-label="Rating">
-          <span className="mr-2 hidden text-[12px] font-bold tracking-[-0.01em] text-muted sm:inline">Rating</span>
+
+        <div className="flex items-center justify-end gap-0.5 sm:justify-start" aria-label="Optional rating">
           {[1, 2, 3, 4, 5].map((rating) => (
             <button
               key={rating}
               type="button"
-              className="rounded-md p-1 text-brand transition-opacity hover:opacity-70"
+              className="rounded p-1 text-muted transition-colors hover:text-accent"
               onClick={() => onChange({ rating: review.rating === rating ? 0 : rating })}
               aria-label={`${rating} star${rating === 1 ? "" : "s"}`}
               aria-pressed={review.rating === rating}
             >
-              <Star className={cn("size-[18px]", rating <= review.rating && "fill-current")} />
+              <Star className={cn("size-4", rating <= review.rating && "fill-current text-accent")} aria-hidden="true" />
             </button>
           ))}
         </div>
+
+        <Button
+          className="col-span-2 w-full sm:ml-auto sm:w-auto"
+          variant={review.reviewed ? "secondary" : "default"}
+          onClick={onReviewed}
+          aria-pressed={review.reviewed}
+        >
+          <Check className="size-4" aria-hidden="true" />
+          {review.reviewed ? "Finished" : "Mark Finished"}
+        </Button>
       </div>
-      <label className="mt-4 block">
-        <span className="mb-2 block text-[12px] font-bold tracking-[-0.01em] text-muted">Private notes</span>
-        <textarea
-          name="private-notes"
-          autoComplete="off"
-          value={review.notes}
-          onChange={(event) => onChange({ notes: event.target.value })}
-          placeholder="Add context, follow-up questions, or a reminder…"
-          rows={3}
-          className="w-full resize-y rounded-lg border bg-surface-raised px-3 py-3 text-sm leading-6 outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/15"
-        />
-      </label>
     </section>
   );
 }

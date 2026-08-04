@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { Aperture } from "lucide-react";
+import { FileSpreadsheet, LockKeyhole } from "lucide-react";
 import { UploadZone } from "@/components/forms/upload-zone";
 import { Workspace } from "@/components/layout/workspace";
 import { useHydrateStore } from "@/hooks/use-hydrate-store";
@@ -21,38 +21,39 @@ export default function Home() {
 
   if (!hydrated) {
     return (
-      <main id="main-content" className="grid min-h-screen place-items-center" aria-label="Loading workspace">
-        <Aperture className="size-7 animate-pulse text-accent" aria-hidden="true" />
+      <main id="main-content" className="grid min-h-screen place-items-center" aria-label="Loading FormLens">
+        <FileSpreadsheet className="size-6 animate-pulse text-muted" aria-hidden="true" />
       </main>
     );
   }
 
-  if (workbook) {
-    return <Workspace />;
-  }
+  if (workbook) return <Workspace />;
 
   return (
-    <main id="main-content" className="grid min-h-screen grid-rows-[auto_1fr] overflow-hidden bg-background px-6 py-5 sm:px-10 sm:py-7">
-      <header>
+    <main id="main-content" className="min-h-svh bg-background">
+      <header className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-2.5">
-          <span className="grid size-8 place-items-center rounded-lg bg-foreground text-background">
-            <Aperture className="size-[18px]" aria-hidden="true" />
+          <span className="grid size-8 place-items-center rounded-lg bg-accent text-accent-foreground">
+            <FileSpreadsheet className="size-4" aria-hidden="true" />
           </span>
-          <span className="text-sm font-semibold tracking-[-0.02em]">FormLens</span>
+          <span className="text-sm font-semibold">FormLens</span>
         </div>
+        <span className="flex items-center gap-1.5 text-xs text-muted">
+          <LockKeyhole className="size-3.5" aria-hidden="true" />
+          Your file stays private
+        </span>
       </header>
 
-      <section className="flex flex-col items-center justify-center py-14">
-        <div className="mb-8 text-center">
-          <p className="mb-3 text-sm font-medium text-brand">
-            One response at a time
-          </p>
-          <h1 className="mx-auto max-w-2xl text-pretty text-4xl font-semibold leading-[1.1] tracking-[-0.04em] sm:text-5xl">
-            Your spreadsheet,
-            <br /> finally readable.
-          </h1>
+      <section className="mx-auto flex max-w-2xl flex-col items-center px-5 pb-16 pt-[12vh] text-center sm:px-6">
+        <h1 className="text-balance text-4xl font-semibold leading-tight tracking-[-0.035em] sm:text-5xl">
+          Read spreadsheet responses without the clutter.
+        </h1>
+        <p className="mt-4 max-w-lg text-base leading-7 text-muted">
+          Choose an Excel or CSV file. FormLens shows one response at a time and saves your progress on this device.
+        </p>
+        <div className="mt-8 w-full">
+          <UploadZone onFile={handleFile} />
         </div>
-        <UploadZone onFile={handleFile} />
       </section>
     </main>
   );

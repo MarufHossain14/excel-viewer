@@ -5,7 +5,6 @@ import { Download, Inbox } from "lucide-react";
 import { ResponseViewer } from "@/components/forms/response-viewer";
 import { ReviewPanel } from "@/components/forms/review-panel";
 import { SettingsDialog } from "@/components/forms/settings-dialog";
-import { StatisticsDialog } from "@/components/forms/statistics-dialog";
 import { AppHeader } from "@/components/layout/app-header";
 import { ResponseSidebar } from "@/components/layout/response-sidebar";
 import { Button } from "@/components/ui/button";
@@ -61,6 +60,10 @@ export function Workspace() {
   const currentIndex = visibleResponses.findIndex((response) => response.id === currentResponseId);
   const safeIndex = currentIndex >= 0 ? currentIndex : 0;
   const currentResponse = visibleResponses[safeIndex];
+  const reviewedCount = sheet?.responses.reduce(
+    (count, response) => count + Number(Boolean(reviews[response.id]?.reviewed)),
+    0,
+  ) ?? 0;
 
   useEffect(() => {
     if (visibleResponses.length && currentIndex < 0) selectResponse(visibleResponses[0].id);
@@ -97,10 +100,12 @@ export function Workspace() {
   if (!workbook || !selectedSheetId || !sheet) return null;
 
   return (
-    <main id="main-content" className="flex h-screen min-h-[620px] flex-col overflow-hidden bg-background">
+    <main id="main-content" className="flex h-dvh min-h-0 flex-col overflow-hidden bg-background">
       <AppHeader
         workbook={workbook}
         selectedSheetId={selectedSheetId}
+        reviewedCount={reviewedCount}
+        totalCount={sheet.responses.length}
         onSelectSheet={(id) => {
           setQuery("");
           setViewOptions(createDefaultResponseView());
@@ -108,13 +113,13 @@ export function Workspace() {
         }}
         onReset={() => void clearWorkbook()}
       >
-        <StatisticsDialog responses={sheet.responses} reviews={reviews} />
-        <Button size="icon-sm" variant="ghost" onClick={() => exportReviews(workbook, reviews)} aria-label="Export review data">
-          <Download className="size-4" />
+        <Button size="sm" variant="ghost" className="px-2" onClick={() => exportReviews(workbook, reviews)} aria-label="Download Excel file with review notes" title="Download with notes">
+          <Download className="size-4" aria-hidden="true" />
+          <span className="hidden lg:inline">Export</span>
         </Button>
         <SettingsDialog settings={settings} onChange={updateSettings} />
       </AppHeader>
-      <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[220px_1fr] md:grid-cols-[240px_1fr] md:grid-rows-1 lg:grid-cols-[288px_1fr]">
+      <div className="grid min-h-0 flex-1 grid-cols-1 grid-rows-[auto_1fr] md:grid-cols-[280px_1fr] md:grid-rows-1">
         <ResponseSidebar
           responses={visibleResponses}
           allResponses={sheet.responses}
@@ -129,7 +134,7 @@ export function Workspace() {
           onClearView={clearView}
           onSelect={selectResponse}
         />
-        <section className="min-h-0 overflow-y-auto px-4 py-6 sm:px-8 lg:px-12 lg:py-8" aria-live="polite">
+        <section className="scroll-region min-h-0 overflow-y-auto bg-background px-4 py-5 sm:px-7 sm:py-6 lg:px-10 lg:py-8" aria-live="polite">
           {currentResponse ? (
             <ResponseViewer
               key={currentResponse.id}

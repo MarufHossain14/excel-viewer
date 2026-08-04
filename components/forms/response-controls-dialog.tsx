@@ -29,8 +29,8 @@ interface ResponseControlsDialogProps {
 
 function directionLabels(sortKey: string): [string, string] {
   if (sortKey === "rating") return ["Lowest first", "Highest first"];
-  if (sortKey === "reviewed") return ["Unreviewed first", "Reviewed first"];
-  if (sortKey === "starred") return ["Unstarred first", "Starred first"];
+  if (sortKey === "reviewed") return ["To review first", "Finished first"];
+  if (sortKey === "starred") return ["Others first", "Favorites first"];
   return ["A–Z", "Z–A"];
 }
 
@@ -64,9 +64,11 @@ export function ResponseControlsDialog({
           size="sm"
           variant={active ? "secondary" : "ghost"}
           className="relative h-8 px-2.5"
+          aria-label="Filter and sort responses"
+          title="Filter and sort"
         >
           <SlidersHorizontal className="size-3.5" aria-hidden="true" />
-          Organize
+          <span className="hidden xl:inline">More filters</span>
           {filterCount > 0 && (
             <span className="grid min-w-4 place-items-center rounded-full bg-foreground px-1 text-[10px] leading-4 text-background">
               {filterCount}
@@ -79,45 +81,47 @@ export function ResponseControlsDialog({
         <DialogHeader>
           <DialogTitle>Filter & Sort Responses</DialogTitle>
           <DialogDescription>
-            Narrow the review queue without changing the original spreadsheet.
+            These choices only change what you see here. Your spreadsheet stays exactly as it is.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-6 sm:grid-cols-2">
           <fieldset>
             <legend className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
-              Filter
+              Show only
             </legend>
 
             <label className="mt-3 block">
-              <span className="text-[13px] font-medium">Review status</span>
+              <span className="text-[13px] font-medium">Finished or unfinished</span>
               <select
+                name="review-status-filter"
                 value={options.reviewFilter}
                 onChange={(event) => onChange({
                   ...options,
                   reviewFilter: event.target.value as ResponseViewOptions["reviewFilter"],
                 })}
-                className="mt-2 h-10 w-full rounded-lg border bg-surface-raised px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/20"
+                className="mt-2 h-10 w-full rounded-lg border bg-surface-raised px-3 text-sm text-foreground focus-visible:border-ring"
               >
-                <option value="all">Any status</option>
-                <option value="unreviewed">Unreviewed</option>
-                <option value="reviewed">Reviewed</option>
-                <option value="starred">Starred</option>
+                <option value="all">Show everything</option>
+                <option value="unreviewed">Still to review</option>
+                <option value="reviewed">Finished</option>
+                <option value="starred">Favorites</option>
               </select>
             </label>
 
             <label className="mt-4 block">
-              <span className="text-[13px] font-medium">Response field</span>
+              <span className="text-[13px] font-medium">Answers to a question</span>
               <select
+                name="answer-filter-field"
                 value={options.filterFieldId ?? ""}
                 onChange={(event) => onChange({
                   ...options,
                   filterFieldId: event.target.value || null,
                   selectedValues: [],
                 })}
-                className="mt-2 h-10 w-full rounded-lg border bg-surface-raised px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/20"
+                className="mt-2 h-10 w-full rounded-lg border bg-surface-raised px-3 text-sm text-foreground focus-visible:border-ring"
               >
-                <option value="">Choose a field</option>
+                <option value="">Choose a question</option>
                 {filterableColumns.map((column) => (
                   <option key={column.id} value={column.id}>{column.label}</option>
                 ))}
@@ -135,6 +139,8 @@ export function ResponseControlsDialog({
                     >
                       <input
                         type="checkbox"
+                        name="answer-filter-value"
+                        value={value.key}
                         checked={checked}
                         onChange={() => onChange({
                           ...options,
@@ -152,34 +158,35 @@ export function ResponseControlsDialog({
               </div>
             ) : (
               <p className="mt-3 text-xs leading-5 text-muted">
-                Fields with 2–50 distinct values appear here, making categories such as positions easy to filter.
+                Choose a question above to show responses with particular answers.
               </p>
             )}
           </fieldset>
 
           <fieldset>
             <legend className="text-xs font-semibold uppercase tracking-[0.08em] text-muted">
-              Sort
+              Put in order
             </legend>
 
             <label className="mt-3 block">
-              <span className="text-[13px] font-medium">Sort responses by</span>
+              <span className="text-[13px] font-medium">Order responses by</span>
               <select
+                name="response-sort"
                 value={options.sortKey}
                 onChange={(event) => {
                   const sortKey = event.target.value;
                   onChange({ ...options, sortKey, sortDirection: defaultDirection(sortKey) });
                 }}
-                className="mt-2 h-10 w-full rounded-lg border bg-surface-raised px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/20"
+                className="mt-2 h-10 w-full rounded-lg border bg-surface-raised px-3 text-sm text-foreground focus-visible:border-ring"
               >
-                <option value="original">Original spreadsheet order</option>
+                <option value="original">Same order as the spreadsheet</option>
                 <optgroup label="Review">
-                  <option value="reviewed">Review status</option>
-                  <option value="starred">Starred status</option>
+                  <option value="reviewed">Finished or unfinished</option>
+                  <option value="starred">Favorites</option>
                   <option value="rating">Rating</option>
                 </optgroup>
                 {fields.length > 0 && (
-                  <optgroup label="Response fields">
+                  <optgroup label="Answers">
                     {fields.map((field) => (
                       <option key={field.id} value={`field:${field.id}`}>{field.label}</option>
                     ))}
@@ -214,17 +221,17 @@ export function ResponseControlsDialog({
             )}
 
             <div className="mt-5 rounded-lg border bg-surface p-4 text-xs leading-5 text-muted">
-              Notes, stars, and ratings stay attached to the same response when its position changes.
+              Your notes, favorites, and ratings always stay with the right response.
             </div>
           </fieldset>
         </div>
 
-        <div className="mt-7 flex items-center justify-between border-t pt-5">
+        <div className="mt-6 flex flex-col-reverse gap-2 border-t pt-5 sm:flex-row sm:items-center sm:justify-between">
           <Button variant="ghost" onClick={onReset} disabled={!active}>
-            Reset
+            Start over
           </Button>
           <DialogTrigger asChild>
-            <Button>Show responses</Button>
+            <Button>See Results</Button>
           </DialogTrigger>
         </div>
       </DialogContent>
