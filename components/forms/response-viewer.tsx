@@ -1,6 +1,7 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { AnswerValue } from "@/components/forms/answer-value";
 import { SearchHighlight } from "@/components/forms/search-highlight";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -79,9 +80,8 @@ export function ResponseViewer({
                 <dd className={cn(
                   "response-answer whitespace-pre-wrap break-words leading-7",
                   field.isLong && "response-answer-long max-w-[76ch]",
-                  field.value === null && "italic text-muted-foreground",
                 )}>
-                  <SearchHighlight text={field.value === null ? "No answer" : String(field.value)} query={query} />
+                  <AnswerValue field={field} query={query} />
                 </dd>
               </div>
             ))}

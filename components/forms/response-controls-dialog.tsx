@@ -68,7 +68,7 @@ export function ResponseControlsDialog({
           title="Filter and sort"
         >
           <SlidersHorizontal className="size-3.5" aria-hidden="true" />
-          <span className="hidden xl:inline">More filters</span>
+          <span>Filters</span>
           {filterCount > 0 && (
             <span className="grid min-w-4 place-items-center rounded-full bg-foreground px-1 text-[10px] leading-4 text-background">
               {filterCount}

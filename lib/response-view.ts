@@ -6,6 +6,9 @@ const collator = new Intl.Collator(undefined, {
   sensitivity: "base",
 });
 
+const DATE_OR_TIME_FIELD_PATTERN =
+  /\b(?:date|time|timestamp|submitted|submission|created at|updated at)\b/i;
+
 export type ReviewFilter = "all" | "unreviewed" | "reviewed" | "starred";
 export type SortDirection = "asc" | "desc";
 
@@ -43,10 +46,17 @@ export function normalizeFilterValue(value: string) {
   return value.trim().toLocaleLowerCase();
 }
 
+export function isDateOrTimeField(label: string) {
+  return DATE_OR_TIME_FIELD_PATTERN.test(label);
+}
+
 export function getFilterableColumns(responses: FormResponse[]): FilterableColumn[] {
   const fields = responses[0]?.fields ?? [];
 
   return fields.flatMap((field) => {
+    // Exact timestamp checkboxes are noisy and rarely help someone narrow a form export.
+    if (isDateOrTimeField(field.originalLabel)) return [];
+
     const values = new Map<string, FilterValue>();
 
     for (const response of responses) {

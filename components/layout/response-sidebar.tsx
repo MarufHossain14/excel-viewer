@@ -6,7 +6,11 @@ import { ResponseControlsDialog } from "@/components/forms/response-controls-dia
 import { SearchHighlight } from "@/components/forms/search-highlight";
 import { useVirtualList } from "@/hooks/use-virtual-list";
 import { cn } from "@/lib/utils";
-import type { ResponseViewOptions, ReviewFilter } from "@/lib/response-view";
+import {
+  isDateOrTimeField,
+  type ResponseViewOptions,
+  type ReviewFilter,
+} from "@/lib/response-view";
 import type { FormResponse, ReviewState } from "@/types/workbook";
 
 interface ResponseSidebarProps {
@@ -26,9 +30,22 @@ interface ResponseSidebarProps {
 
 function responseIdentity(response: FormResponse) {
   const populated = response.fields.filter((field) => field.value !== null);
+  const useful = populated.filter(
+    (field) => !isDateOrTimeField(field.originalLabel),
+  );
+  const titleField =
+    useful.find((field) => /\b(?:full )?name\b/i.test(field.originalLabel))
+    ?? useful.find((field) => /\be-?mail\b/i.test(field.originalLabel))
+    ?? useful.find((field) => !field.isLong)
+    ?? useful[0]
+    ?? populated[0];
+  const subtitleField = useful.find(
+    (field) => field.id !== titleField?.id && !field.isLong,
+  );
+
   return {
-    title: populated[0]?.searchValue || `Response ${response.rowNumber - 1}`,
-    subtitle: populated[1]?.searchValue || `Spreadsheet row ${response.rowNumber}`,
+    title: titleField?.searchValue || `Response ${response.rowNumber - 1}`,
+    subtitle: subtitleField?.searchValue || `Spreadsheet row ${response.rowNumber}`,
   };
 }
 
